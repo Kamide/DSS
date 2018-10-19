@@ -1,0 +1,23 @@
+ <!DOCTYPE html>
+ <!-- Arafat Arman, Kangming Deng,  -->
+<html>
+  <head>
+    <title>{% block title %}{% endblock %}</title>
+    <meta charset="utf-8">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'base.css' %}">
+  </head>
+  <body>
+    {% block nav %}
+    <div id="container">
+        <ul id="nav">
+            <li><a href="">DSS</a></li>
+            <li><a href="{% url 'index' %}">Home</a></li>
+            <li><a href="">My Documents</a></li>
+            <li><a href="">Login/Signup</a></li>
+        </ul>
+        {% endblock%}
+        {% block body %}{% endblock %}
+    </div>
+  </body>
+</html>

@@ -1,0 +1,68 @@
+body, h1, h2, h3, h4, h5, h6, p, #container, #nav {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-image: url('noise.png');
+    font-family: 'Arial', sans-serif;
+}
+
+#container {
+    display: grid;
+    grid-template-columns: 1;
+    grid-gap: 16px;
+}
+
+#nav {
+    display: grid;
+    grid-column: span 3;
+    grid-template-columns: 1;
+    list-style: none;
+}
+
+#nav li {
+    padding: 4px 16px 0px 16px;
+    border-bottom: 4px solid #efefef;
+    background-color: #fefefe;
+    font-size: 18pt;
+    transition: border 0.1s;
+}
+
+#nav li:hover {
+    border-bottom: 4px solid #3d3d3d;
+}
+
+#nav a {
+    color: #3d3d3d;
+    text-decoration: none;
+}
+
+.content {
+    grid-column: span 3;
+    padding: 8px;
+    border: thin solid #efefef;
+    border-radius: 2px;
+    background-color: #fefefe;
+}
+
+@media (min-width: 550px) {
+    #container {
+        grid-template-columns: 10fr 80fr 10fr;
+    }
+    #nav {
+        grid-template-columns: auto auto auto auto;
+    }
+    .content {
+        grid-column: 2 / auto;
+    }
+}
+
+@media (min-width: 1000px) {
+    #container {
+        grid-template-columns: 23fr 64fr 23fr;
+    }
+    .content {
+        grid-column: 2 / auto;
+    }
+}
