@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}DSS - Log In{% endblock %}
+{% block head %}
+{% load static %}
+<link type="text/css" rel="stylesheet" href="{% static 'forms.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="content">
+    <h1>Log In</h1>
+    {% if user.is_authenticated %}
+    <p>
+        It looks like you are already logged in. To sign out, please click
+        <a href="{% url 'logout' %}">here</a>. If that does not work,
+        try clearing your browser's cache.
+    </p>
+    {% else %}
+    <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        <p>
+            {{ form.username.label_tag }}
+                <br />
+            {{ form.username }}
+        </p>
+        <p>
+            {{ form.password.label_tag }}
+                <br />
+            {{ form.password }}
+        </p>
+        <div>
+            <input type="submit" value="Log In" />
+            <input type="hidden" name="next" value="{{ next }}" />
+        </div>
+    </form>
+
+    {% if form.errors %}
+    <p>
+        The entered combination of username and password did not match any of
+        our existing records. Please try again.
+    </p>
+    {% endif %}
+    {% endif %}
+</div>
+{% endblock %}

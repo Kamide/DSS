@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}DSS - Home{% endblock %}
+{% block head %}
+<style>
+    #pfp {
+        float: left;
+        width: 1in;
+        height: 1in;
+        margin-right: 16px;
+        border: 2px solid white;
+        border-radius: 4px;
+        box-shadow: 0px 2px 2px #efefef;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div class="content">
+    <h1>Account Information</h1>
+    <p>
+        {% load static %}
+        <img id="pfp" src="{% static 'default_pfp.png' %}" />
+        Greetings, {{ user }}.
+    </p>
+</div>
+
+<div class="content">
+    <h1>My Recent Documents</h1>
+</div>
+
+<div class="content">
+    <h1>Documents Shared With Me</h1>
+</div>
+{% else %}
+<div class="content">
+    <h1>Most Popular Documents</h1>
+    <p>
+        You are seeing this because you are not logged in. Click
+        <a href="{% url 'login' %}">here</a> to do so.
+            <br />
+        If you do not have an account, click
+        <a href="{% url 'signup' %}">here</a> to sign up.
+    </p>
+{% endif %}
+{% endblock %}

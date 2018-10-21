@@ -1,23 +1,28 @@
  <!DOCTYPE html>
- <!-- Arafat Arman, Kangming Deng,  -->
+ <!-- Arafat Arman, Kangming Deng, Andy Li -->
 <html>
   <head>
     <title>{% block title %}{% endblock %}</title>
     <meta charset="utf-8">
     {% load static %}
-    <link rel="stylesheet" href="{% static 'base.css' %}">
+    <link type="text/css" rel="stylesheet" href="{% static 'base.css' %}">
+    {% block head %}{% endblock %}
   </head>
   <body>
-    {% block nav %}
     <div id="container">
         <ul id="nav">
-            <li><a href="">DSS</a></li>
-            <li><a href="{% url 'index' %}">Home</a></li>
+            <li><a class="{% if request.resolver_match.url_name == 'about'%}opened{% endif %}" href="{% url 'about' %}">DSS</a></li>
+            <li><a class="{% if request.resolver_match.url_name == 'index' or request.resolver_match.url_name == 'home'%}opened{% endif %}" href="{% url 'index' %}">Home</a></li>
             <li><a href="">My Documents</a></li>
-            <li><a href="">Login/Signup</a></li>
+            {% if user.is_authenticated %}
+                <li><a class="" href="">Account Settings</a></li>
+                <li><a href="{% url 'logout' %}">Log Out</a></li>
+            {% else %}
+                <li><a class="{% if request.resolver_match.url_name == 'login'%}opened{% endif %}" href="{% url 'login' %}">Log In</a></li>
+                <li><a class="{% if request.resolver_match.url_name == 'signup'%}opened{% endif %}" href="{% url 'signup' %}">Sign Up</a></li>
+            {% endif %}
         </ul>
-        {% endblock%}
-        {% block body %}{% endblock %}
+        {% block content %}{% endblock %}
     </div>
   </body>
 </html>

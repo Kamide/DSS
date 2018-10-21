@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}DSS - Logged Out{% endblock %}
+
+{% block content %}
+<div class="content">
+    <h1>Logged Out</h1>
+    <p>
+        Thank you for spending quality time on DSS. You have been successfully
+        logged out. To log in again, please click
+        <a href="{% url 'login' %}">here</a>.
+    </p>
+</div>
+{% endblock %}
