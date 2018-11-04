@@ -7,39 +7,32 @@
 {% endblock %}
 
 {% block content %}
-<div class="content">
+<div class="card">
     <h1>Log In</h1>
     {% if user.is_authenticated %}
-    <p>
-        It looks like you are already logged in. To sign out, please click
-        <a href="{% url 'logout' %}">here</a>. If that does not work,
-        try clearing your browser's cache.
-    </p>
+    {% include './already_logged_in.html' %}
     {% else %}
-    <form method="post" action="{% url 'login' %}">
+    <form class="body-text" method="post" action="{% url 'login' %}">
         {% csrf_token %}
-        <p>
+        <div class="form-block">
             {{ form.username.label_tag }}
-                <br />
             {{ form.username }}
-        </p>
-        <p>
-            {{ form.password.label_tag }}
-                <br />
-            {{ form.password }}
-        </p>
-        <div>
-            <input type="submit" value="Log In" />
-            <input type="hidden" name="next" value="{{ next }}" />
         </div>
+        <div class="form-block">
+            {{ form.password.label_tag }}
+            {{ form.password }}
+        </div>
+        <input type="submit" value="Log In" />
+        <input type="hidden" name="next" value="{{ next }}" />
     </form>
 
+    <p class="footer">
     {% if form.errors %}
-    <p>
-        The entered combination of username and password did not match any of
-        our existing records. Please try again.
-    </p>
+        The entered combination of username and password did not match any of our existing records. Please try again.
+    {% else %}
+        Don't have an account? Click <a href="{% url 'signup' %}">here</a> to sign up.
     {% endif %}
+    </p>
     {% endif %}
 </div>
 {% endblock %}

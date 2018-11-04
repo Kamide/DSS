@@ -1,4 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib import messages
 
 
 def index(request):
@@ -6,4 +8,13 @@ def index(request):
 
 
 def signup(request):
-    return render(request, 'accounts/signup.html')
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            messages.success(request, f'Your account {username} has been successfully created. You may now log in.')
+            return redirect('login')
+    else:
+        form = UserCreationForm()
+    return render(request, 'registration/signup.html', {'form': form})

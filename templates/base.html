@@ -6,22 +6,30 @@
     <meta charset="utf-8">
     {% load static %}
     <link type="text/css" rel="stylesheet" href="{% static 'base.css' %}">
+    <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans:100,100i,400,400i,700,700i" rel="stylesheet">
     {% block head %}{% endblock %}
   </head>
   <body>
-    <div id="container">
-        <ul id="nav">
+    <div id="header">
+        <ul id="nav" class="bulletless">
             <li><a class="{% if request.resolver_match.url_name == 'about'%}opened{% endif %}" href="{% url 'about' %}">DSS</a></li>
             <li><a class="{% if request.resolver_match.url_name == 'index' or request.resolver_match.url_name == 'home'%}opened{% endif %}" href="{% url 'index' %}">Home</a></li>
-            <li><a href="">My Documents</a></li>
+            <li><a href="">Documents</a></li>
             {% if user.is_authenticated %}
-                <li><a class="" href="">Account Settings</a></li>
+                <li><a class="" href="">Users</a></li>
                 <li><a href="{% url 'logout' %}">Log Out</a></li>
             {% else %}
                 <li><a class="{% if request.resolver_match.url_name == 'login'%}opened{% endif %}" href="{% url 'login' %}">Log In</a></li>
                 <li><a class="{% if request.resolver_match.url_name == 'signup'%}opened{% endif %}" href="{% url 'signup' %}">Sign Up</a></li>
             {% endif %}
         </ul>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <div id="content">
         {% block content %}{% endblock %}
     </div>
   </body>
