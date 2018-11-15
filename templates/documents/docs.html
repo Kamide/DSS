@@ -5,17 +5,14 @@
 {% block content %}
 <div class="card">
     {% if user.is_authenticated %}
-    <h1>Recent Documents</h1>
-    {% ifequal user.groups.all.0.name "Guest User" %}
-
-    {% endifequal %}
-    <p> Your recent documents will go here (if GU/SU) </p>
-    <p> </p>
-    {% else %}
-    <h1>What is DSS?</h1>
-    <p>
-        ...
-    </p>
+        {% ifequal user.groups.all.0.name "Guest Users" %}
+        <h1>Popular Documents</h1>
+        <p>3 MOST POPULAR DOCUMENTS WILL GO HERE (YOU ARE A GU)</p>
+        {% else %}
+        <h1>Recent Documents</h1>
+        <p>YOU 3 MOST RECENTLY EDITED DOCUMENTS (YOU ARE AN OU OR A SU)</p>
+        <div>CREATE NEW DOCUMENT</div>
+        {% endifequal %}
     {% endif %}
 </div>
 {% endblock %}

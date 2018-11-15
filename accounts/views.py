@@ -6,7 +6,6 @@ from django.contrib import messages
 def index(request):
     return render(request, 'accounts/index.html')
 
-
 def signup(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -18,3 +17,6 @@ def signup(request):
     else:
         form = UserCreationForm()
     return render(request, 'registration/signup.html', {'form': form})
+
+def settings(request):
+    return render(request, 'accounts/settings.html')
