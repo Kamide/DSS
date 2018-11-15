@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}DSS - Documents{% endblock %}
+
+{% block content %}
+<div class="card">
+    {% if user.is_authenticated %}
+    <h1>Recent Documents</h1>
+    {% ifequal user.groups.all.0.name "Guest User" %}
+
+    {% endifequal %}
+    <p> Your recent documents will go here (if GU/SU) </p>
+    <p> </p>
+    {% else %}
+    <h1>What is DSS?</h1>
+    <p>
+        ...
+    </p>
+    {% endif %}
+</div>
+{% endblock %}
