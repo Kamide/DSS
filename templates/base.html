@@ -17,7 +17,7 @@
             <li><a class="{% if request.resolver_match.url_name == 'docs' %}opened{% endif %}" href="{% url 'docs' %}">Documents</a></li>
 
             {% if user.is_authenticated %}
-                <li><a class="" href="">Users</a></li>
+                <li><a class="{% if request.resolver_match.url_name == 'users' %}opened{% endif %}" href="{% url 'users' %}">Users</a></li>
                 <li><a href="{% url 'logout' %}">Log Out</a></li>
             {% else %}
                 <li><a class="{% if request.resolver_match.url_name == 'login'%}opened{% endif %}" href="{% url 'login' %}">Log In</a></li>

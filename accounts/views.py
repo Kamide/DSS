@@ -20,3 +20,6 @@ def signup(request):
 
 def settings(request):
     return render(request, 'accounts/settings.html')
+
+def users(request):
+    return render(request, 'accounts/users.html')

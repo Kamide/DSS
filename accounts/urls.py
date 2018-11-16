@@ -8,4 +8,6 @@ urlpatterns = [
     path('home/', views.index, name='index'),
     # /accounts/settings
     path('settings/', views.settings, name='settings'),
+    #/accounts/users
+    path('users/', views.users, name='users'),
 ]
