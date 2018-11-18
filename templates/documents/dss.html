@@ -6,7 +6,63 @@
 <div class="card">
     <h1>What is DSS?</h1>
     <p>
-        ...
+        The Document Sharing System(DSS) is a web application that allows registered users to create, edit, and read each
+        other's documents. The system is aimed at providing as satisfying of an experience for users as possible. To do
+        this, this system has established the following features/guidelines.
+    </p>
+    <h1>Documents</h1>
+    <p>
+        As the core aspect of this system, the documents belonging to DSS have the following features:
+        <u1>
+            <li>Varying privacy levels</li>
+            <li>Access older versions of documents</li>
+            <li>Censor words in a universal taboo list</li>
+            <li>Search keywords within document</li>
+            <li>Ability to lock/unlock documents</li>
+            <li>Invite other users to work on documents</li>
+        </u1>
+    </p>
+    <h1>Users</h1>
+    <p>
+        Users that are registered under DSS are divided into different categories each with different levels of privileges.
+        The following subsection lists the privileges of each type of user. For a more detailed description of each privilege,
+        visit:
+        <h2>Guest User(GU)</h2>
+        <p>
+            Guest users have access to the least amount of privileges from the pool of all possible privileges. Their privileges
+            are as follows:
+            <u1>
+                <li>Read documents and retrieve older versions of them</li>
+                <li>File complaints about documents</li>
+                <li>Suggest taboo words to an SU</li>
+                <li>Apply to be promoted to an OU</li>
+            </u1>
+        </p>
+        <h2>Ordinary User(OU)</h2>
+        <p>
+            Ordinary users have access to all privileges of a GU as well as the following:
+            <u1>
+                <li>Create a new document with any privacy level</li>
+                <li>Invite other OUs to work on one's document and accept/deny invites to work on documents</li>
+                <li>Lock a shared document to update it</li>
+                <li>Unlock a locked document</li>
+                <li>File complaints about updates made by other contributors or about the owner of a document</li>
+                <li>Handle complaints regarding contributors of one's document</li>
+                <li>Search keywords within one's document</li>
+                <li>Search information about other OUs based on username/interests</li>
+            </u1>
+        </p>
+        <h2>Super User(SU)</h2>
+        <p>
+            Super users have access to all privileges of an OU and thus all privileges in general. Their unique privileges
+            are as follows:
+            <u1>
+                <li>Update the membership of individual users</li>
+                <li>Maintain the list of taboo words</li>
+                <li>Unlock any locked document</li>
+                <li>Handle complaints about an OU</li>
+            </u1>
+        </p>
     </p>
 </div>
 {% endblock %}

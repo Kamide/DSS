@@ -1,10 +1,10 @@
 from django.db import models
-from accounts.models import Profile
+from accounts.models import UserAcc
 
 class Document(models.Model):
     PRIVACY_LEVELS = (('PUB', 'Public'), ('R', 'Restricted'), ('S', 'Shared'), ('PRIV', 'Private'))
-    owner = models.CharField(max_length=30, primary_key=True)
-    title = models.CharField(max_length=30, primary_key=True)
+    owner = models.CharField(max_length=30)
+    title = models.CharField(max_length=30)
     privacy = models.CharField(max_length=4, choices=PRIVACY_LEVELS)
     content = models.CharField(max_length=100)
     version = models.IntegerField(default=000)
@@ -12,9 +12,11 @@ class Document(models.Model):
     locked_by = models.CharField(max_length=30)
     edit_count = models.IntegerField(default=000)
     view_count = models.IntegerField(default=000)
-    user = models.ForeignKey(Profile)
-    users_that_read = models.ManyToManyField(user)
-    users_that_edit = models.ManyToManyField(user)
+    users_that_read = models.ManyToManyField(UserAcc)
+    users_that_write = models.ManyToManyField(UserAcc, related_name="Contributors")
 
     def __str__(self):
         return self.owner + self.title
+
+    class Meta:
+        unique_together = (("owner", "title"),)
