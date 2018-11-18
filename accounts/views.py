@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
+from .forms import UserUpdateForm, UpdateProfileForm
 
 
 def index(request):
@@ -19,7 +20,14 @@ def signup(request):
     return render(request, 'registration/signup.html', {'form': form})
 
 def settings(request):
-    return render(request, 'accounts/settings.html')
+    user_form = UserUpdateForm()
+    profile_form = UpdateProfileForm()
+    context = {
+        'user_form': user_form,
+        'profile_form': profile_form
+    }
+    return render(request, 'accounts/settings.html', context)
 
 def users(request):
     return render(request, 'accounts/users.html')
+
