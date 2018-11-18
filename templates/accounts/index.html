@@ -19,7 +19,7 @@
 {% if user.is_authenticated %}
 <div class="card">
     <h1>My Account Information</h1>
-    <p>
+    <div>
         {% load static %}
         <img id="pfp" src="{% if user.profile.picture != '' %}{{ user.profile.picture }}{% else %}{% static 'default_pfp.png' %}{% endif %}" />
         <ul class="spacious bulletless">
@@ -32,7 +32,7 @@
             {% endif %}
         </ul>
         <p class="footer"><a href="{% url 'settings' %}">Change Account Settings</a></p>
-    </p>
+    </div>
 </div>
 
 <div class="card">
@@ -43,6 +43,6 @@
     <h1>Documents Shared With Me</h1>
 </div>
 {% else %}
-{% include 'please_log_in.html' %}
+{% include 'registration/please_log_in.html' %}
 {% endif %}
 {% endblock %}

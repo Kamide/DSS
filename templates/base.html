@@ -20,8 +20,8 @@
                 <li><a class="{% if request.resolver_match.url_name == 'users' %}opened{% endif %}" href="{% url 'users' %}">Users</a></li>
                 <li><a href="{% url 'logout' %}">Log Out</a></li>
             {% else %}
-                <li><a class="{% if request.resolver_match.url_name == 'login'%}opened{% endif %}" href="{% url 'login' %}">Log In</a></li>
                 <li><a class="{% if request.resolver_match.url_name == 'signup'%}opened{% endif %}" href="{% url 'signup' %}">Sign Up</a></li>
+                <li><a class="{% if request.resolver_match.url_name == 'login'%}opened{% endif %}" href="{% url 'login' %}">Log In</a></li>
             {% endif %}
         </ul>
         {% if messages %}

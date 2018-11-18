@@ -1,22 +1,28 @@
 {% extends 'base.html' %}
-{% load crispy_forms_tags %}
 
 {% block title %}DSS - Profile{% endblock %}
+{% block head %}
+{% load static %}
+<link type="text/css" rel="stylesheet" href="{% static 'forms.css' %}">
+<style>
+    input[type=text], input[type=url] {
+        max-width: none;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
 <div class="card">
+    <h1>Account Settings</h1>
+    <p><a href="{% url 'password_change' %}">Change Password</a></p>
+</div>
+<div class="card">
     <h1>Profile Settings</h1>
-    <p></p>
-    <form method = "POST" enctype="multipart/form-data">
+    <form class="body-text" method = "post">
         {% csrf_token %}
-        <fieldset class="form-group">
-            <legend class="border-bottom mb-4">Profile Info</legend>
-            {{ user_form|crispy }}
-            {{ profile_form|crispy }}
-        </fieldset>
-        <div class="form-group">
-            <button class="btn btn-outline-info" type="submit">Update</button>
-        </div>
+        <div class="form-block">{{ profile_form }}</div>
+        <input type="submit" value="Update" />
+        <input type="hidden" name="next" value="" />
     </form>
 </div>
 {% endblock %}

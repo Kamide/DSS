@@ -136,7 +136,7 @@ p, .spacious {
     background-image: linear-gradient(rgba(0, 0, 0, 0.02), transparent);
 }
 
-@media (min-width: 500px) {
+@media only screen and (min-width: 500px) {
     p, .body-text, .spacious {
         font-size: 1.25em;
     }
@@ -161,7 +161,7 @@ p, .spacious {
     }
 }
 
-@media (min-width: 800px) {
+@media only screen and (min-width: 800px) {
     #content {
         width: 8.5in;
     }

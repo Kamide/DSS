@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
-from .forms import UserUpdateForm, UpdateProfileForm
+from .forms import UpdateProfileForm
 
 
 def index(request):
     return render(request, 'accounts/index.html')
+
 
 def signup(request):
     if request.method == 'POST':
@@ -19,15 +21,23 @@ def signup(request):
         form = UserCreationForm()
     return render(request, 'registration/signup.html', {'form': form})
 
+
+@login_required
 def settings(request):
-    user_form = UserUpdateForm()
-    profile_form = UpdateProfileForm()
+    if request.method == 'POST':
+        profile_form = UpdateProfileForm(request.POST, instance=request.user.profile)
+        if profile_form.is_valid():
+            profile_form.save()
+            messages.success(request, f'Your profile settings have been saved!')
+    else:
+        profile_form = UpdateProfileForm(instance=request.user.profile)
+
     context = {
-        'user_form': user_form,
         'profile_form': profile_form
     }
+
     return render(request, 'accounts/settings.html', context)
+
 
 def users(request):
     return render(request, 'accounts/users.html')
-

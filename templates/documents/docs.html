@@ -3,16 +3,18 @@
 {% block title %}DSS - Documents{% endblock %}
 
 {% block content %}
+{% if user.is_authenticated %}
 <div class="card">
-    {% if user.is_authenticated %}
-        {% ifequal user.groups.all.0.name "Guest Users" %}
-        <h1>Popular Documents</h1>
-        <p>3 MOST POPULAR DOCUMENTS WILL GO HERE (YOU ARE A GU)</p>
-        {% else %}
-        <h1>Recent Documents</h1>
-        <p>YOU 3 MOST RECENTLY EDITED DOCUMENTS (YOU ARE AN OU OR A SU)</p>
-        <div>CREATE NEW DOCUMENT</div>
-        {% endifequal %}
-    {% endif %}
+    {% ifequal user.groups.all.0.name "Guest Users" %}
+    <h1>Popular Documents</h1>
+    <p>3 MOST POPULAR DOCUMENTS WILL GO HERE (YOU ARE A GU)</p>
+    {% else %}
+    <h1>Recent Documents</h1>
+    <p>YOU 3 MOST RECENTLY EDITED DOCUMENTS (YOU ARE AN OU OR A SU)</p>
+    <div>CREATE NEW DOCUMENT</div>
+    {% endifequal %}
 </div>
+{% else %}
+{% include 'registration/please_log_in.html' %}
+{% endif %}
 {% endblock %}
