@@ -129,11 +129,23 @@ p, .spacious {
     list-style: circle;
 }
 
+hr {
+    border: none;
+    border-bottom: thin solid #dedede;
+}
+
 .footer {
     padding: 16px 8px 0px 8px;
     border-top: thin solid #dedede;
     border-radius: 8px;
     background-image: linear-gradient(rgba(0, 0, 0, 0.02), transparent);
+}
+
+.pfp {
+    border: thin solid #dedede;
+    border-radius: 4px;
+    /* background-image: url('default_pfp.png'); */
+    box-shadow: 0px 2px 2px #dedede;
 }
 
 @media only screen and (min-width: 500px) {

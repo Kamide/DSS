@@ -1,0 +1,2 @@
+{% load static %}
+<img class="pfp" src="{% if user.profile.picture != '' %}{{ user.profile.picture }}{% else %}{% static 'default_pfp.png' %}{% endif %}" />

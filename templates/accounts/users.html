@@ -1,11 +1,78 @@
 {% extends 'base.html' %}
 
 {% block title %}Registered Users{% endblock %}
+{% block head %}
+<style>
+    .pfp {
+        margin-right: 4px;
+        width: 48px;
+        height: 48px;
+    }
+    .user-info {
+        display: flex;
+        justify-content: space-between;
+    }
+    .user-info span {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        position: relative;
+    }
+    .user-info span:first-child {
+        flex: 1;
+        margin-right: 8px;
+    }
+    .user-info span:first-child:after {
+        content: "";
+        position: absolute;
+        right: 0;
+        height: 60%;
+        border-right: thin solid #dedede;
+        transform: skew(-8deg);
+    }
+    .user-info .inseparable * {
+        vertical-align: middle;
+    }
+    .user-info span:hover:after {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border: thin solid rgba(100, 240, 200, 0.9);
+        border-radius: 4px;
+        box-sizing: border-box;
+        background-color: rgba(223, 255, 229, 0.1);
+        pointer-events: none;
+        transform: skew(0deg);
+    }
+    .a-multi {
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
 <div class="card">
     <h1>List of Registered Users in our System</h1>
-    <p>
-    </p>
+    {% for user in users %}
+        <div class="user-info body-text">
+            <span>
+                <a class="a-multi" href="">
+                    <div class="inseparable">
+                        {% include 'accounts/pfp.html' %}
+                        {{ user.username }}
+                    </div>
+                </a>
+            </span>
+            <span>
+                <a href="">Message</a>
+            </span>
+        </div>
+        {% if not forloop.last %}
+            <hr />
+        {% endif %}
+    {% endfor %}
 </div>
 {% endblock %}
