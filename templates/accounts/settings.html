@@ -4,11 +4,6 @@
 {% block head %}
 {% load static %}
 <link type="text/css" rel="stylesheet" href="{% static 'forms.css' %}">
-<style>
-    input[type=text], input[type=url] {
-        max-width: none;
-    }
-</style>
 {% endblock %}
 
 {% block content %}
@@ -18,11 +13,19 @@
 </div>
 <div class="card">
     <h1>Profile Settings</h1>
-    <form class="body-text" method = "post">
+    <form class="body-text" method="post">
         {% csrf_token %}
-        <div class="form-block">{{ profile_form }}</div>
-        <input type="submit" value="Update" />
-        <input type="hidden" name="next" value="" />
+        <div class="form-block wide">{{ profile_form }}</div>
+        <div class="form-block wide">
+            <input type="submit" value="Update" />
+            <input type="hidden" name="next" value="" />
+        </div>
     </form>
+    <p class="footer">
+        For best results, choose an image with a square aspect ratio and
+        make sure your link has &quot;http://&quot; or &quot;https://&quot; in the front.
+        To optimize searchability, use spaces, commas, dashes, and/or underscores
+        when separating different interests.
+    </p>
 </div>
 {% endblock %}

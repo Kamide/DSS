@@ -3,6 +3,7 @@ from documents import views
 
 urlpatterns = [
     # /documents/
+    path('', views.docs, name='docs'),
+    # /documents/dss/
     path('dss/', views.index, name='about'),
-    path('docs/', views.docs, name='docs'),
 ]

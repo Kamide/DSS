@@ -2,27 +2,23 @@
 
 {% block title %}Registered Users{% endblock %}
 {% block head %}
+{% load static %}
+<link type="text/css" rel="stylesheet" href="{% static 'forms.css' %}">
+<link type="text/css" rel="stylesheet" href="{% static 'flexboxes.css' %}">
 <style>
     .pfp {
         margin-right: 4px;
         width: 48px;
         height: 48px;
     }
-    .user-info {
-        display: flex;
-        justify-content: space-between;
-    }
-    .user-info span {
-        display: flex;
-        justify-content: center;
-        flex-direction: column;
-        position: relative;
-    }
-    .user-info span:first-child {
+    .user-info > span:first-child {
         flex: 1;
-        margin-right: 8px;
     }
-    .user-info span:first-child:after {
+    .user-info > span:not(:last-child) {
+        margin-right: 8px;
+        padding-right: 8px;
+    }
+    .user-info > span:not(:last-child):after {
         content: "";
         position: absolute;
         right: 0;
@@ -30,11 +26,9 @@
         border-right: thin solid #dedede;
         transform: skew(-8deg);
     }
-    .user-info .inseparable * {
-        vertical-align: middle;
-    }
-    .user-info span:hover:after {
+    .user-info > span:hover:after {
         content: "";
+        display: block;
         position: absolute;
         width: 100%;
         height: 100%;
@@ -45,28 +39,74 @@
         pointer-events: none;
         transform: skew(0deg);
     }
-    .a-multi {
+    .paginator .left, .paginator .right {
+        flex: 1;
+    }
+    .paginator .middle {
+        text-align: center;
+    }
+    .paginator .right {
+        text-align: right;
+    }
+    .fancy-button {
         display: inline-block;
-        width: 100%;
-        height: 100%;
+        position: relative;
+        padding: 6px 12px;
+        border: thin solid rgba(0, 0, 0, 0);
+        border-radius: 6px;
+        transition: border 0.1s, box-shadow 0.1s;
+    }
+    .fancy-button:hover {
+        border: thin solid rgba(100, 240, 200, 0.9);
+        box-shadow: none;
+    }
+    .fancy-button-active {
+        border-radius: 0;
+        box-shadow: 0px 3px 0px rgba(100, 240, 200, 0.9);
+    }
+    #ipp {
+        margin-right: 8px;
     }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="card">
+    <h1>Search</h1>
+    <form class="body-text" method="get">
+        <div class="form-block wide distributed">
+            <input class="filler" type="text" name="search" value="{{ search }}" />
+            <input type="submit" value="Search" />
+            <input type="hidden" name="count" value="{{ count }}" />
+        </div>
+    </form>
+    <a class="fancy-button" href="{% url 'users' %}">Clear Search Filters</a>
+    <p class="footer">Try searching for a name or an interest, then press enter or search to continue.</p>
+</div>
+
+<div class="card">
     <h1>List of Registered Users in our System</h1>
-    {% for user in users %}
-        <div class="user-info body-text">
-            <span>
-                <a class="a-multi" href="">
-                    <div class="inseparable">
-                        {% include 'accounts/pfp.html' %}
-                        {{ user.username }}
-                    </div>
+    <form class="body-text" method="get">
+        <div class="form-block wide distributed">
+            <label id="ipp" for="count">Items per page:</label>
+            <input type="hidden" name="search" value="{{ search }}" />
+            <input id="count" class="filler" type="number" name="count" min="1" step="1" value="{{ count }}" />
+            <input type="submit" value="Change" />
+            <!-- <input type="hidden" name="page" value="{{ list_of_users.number }}" /> -->
+        </div>
+    </form>
+    {% for user in list_of_users %}
+        <div class="user-info distributed body-text">
+            <span class="group">
+                <a href="">
+                    {% include 'accounts/pfp.html' %}
+                    <span>
+                        {% load string_manipulation %}
+                        {{ user.username }} ({{ ""|acronymize:user.groups.all.0 }})
+                    </span>
                 </a>
             </span>
-            <span>
+            <span class="group">
                 <a href="">Message</a>
             </span>
         </div>
@@ -74,5 +114,28 @@
             <hr />
         {% endif %}
     {% endfor %}
+    <div class="paginator body-text distributed footer">
+        <span class="group left">
+            {% if list_of_users.has_previous %}
+                <a href="?search={{ search }}&count={{ count }}&page=1">&lt;&lt; First</a>
+                    <br />
+                <a href="?search={{ search }}&count={{ count }}&page={{ list_of_users.previous_page_number }}">Previous</a>
+            {% endif %}
+        </span>
+        <span class="group middle">
+            <i>{{ list_of_users.number }} of {{ list_of_users.paginator.num_pages }}</i>
+            <span class="space-above">
+                {% for i in sequence %}
+                    <a class="fancy-button {% if i == list_of_users.number %}fancy-button-active{% endif %}" href="?search={{ search }}&count={{ count }}&page={{ i }}">{{ i }}</a>
+                {% endfor %}
+            </span>
+        </span>
+        <span class="group right">
+            {% if list_of_users.has_next %}
+                <a href="?search={{ search }}&count={{ count }}&page={{ list_of_users.paginator.num_pages }}">Last &gt;&gt;</a>
+                <a href="?search={{ search }}&count={{ count }}&page={{ list_of_users.next_page_number }}">Next</a>
+            {% endif %}
+        </span>
+    </div>
 </div>
 {% endblock %}

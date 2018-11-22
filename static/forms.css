@@ -1,52 +1,74 @@
-form, input {
-    font-size: 1em;
-}
-
-input {
+form {
     margin: 8px 0;
 }
 
-.form-block {
-    display: block;
-    margin-bottom: 8px 0;
+form > .form-block {
+    /* For debugging margins */
+    /* border: thick solid yellow; */
+    margin: 8px 0;
 }
 
-.form-block label {
+.form-block > p, .form-block > label {
+    /* For debugging margins */
+    /* border: thick solid red; */
+    margin: 4px 0;
+}
+
+.seamless {
+    margin: 0;
+}
+
+.seamless * {
+    margin: 0;
+}
+
+form, input, button {
+    font-size: 1em;
+    color: inherit;
+    box-sizing: border-box
+}
+
+.form-block, .form-block label, .wide {
     display: block;
 }
 
-input[type=text], input[type=url], input[type=password], input[type=submit] {
-    padding: 6px;
+input {
     max-width: 500px;
     width: 100%;
+}
+
+.wide input {
+    max-width: none;
+}
+
+button, input {
+    padding: 6px;
     border: thin solid #dedede;
     border-radius: 2px;
     background-color: #fefefe;
-    box-sizing: border-box;
-    box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.05);
     transition: border 0.1s;
 }
 
-input[type=text]:hover, input[type=password]:hover, input[type=submit]:hover,
-input[type=text]:focus, input[type=password]:focus, input[type=submit]:focus,
-input[type=url] {
+input[type=text], input[type=password], input[type=number], input[type=url]  {
+    box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+input:hover, input:focus {
     border: thin solid #5da486;
 }
 
-input[type=text]:invalid:focus, input[type=password]:invalid:focus,
-input[type=url]:invalid {
-    border: thin solid red;
+input:invalid:focus, input[type=url]:invalid {
+    border: thin solid #ff002c;
 }
 
-input[type=submit] {
-    box-shadow: none;
+button, input[type=submit] {
     background-image: linear-gradient(rgb(254, 254, 254), rgb(246, 248, 250));
 }
 
-input[type=submit]:hover {
+button:hover, input[type=submit]:hover {
     background-image: linear-gradient(rgb(255, 255, 255), rgb(250, 252, 254));
 }
 
-input[type=submit]:active {
+button:active, input[type=submit]:active {
     background-image: linear-gradient(rgb(254, 254, 254), rgb(236, 238, 240));
 }
