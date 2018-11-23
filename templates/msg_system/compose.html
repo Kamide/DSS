@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}DSS - Compose Message{% endblock %}
+{% block head %}
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Compose Message</h1>
+</div>
+<div class="card">
+    <form class="body-text" method = "post">
+        {% csrf_token %}
+        <div class="form-block">{{ message_form }}</div>
+        <input type="submit" value="Send" />
+        <input type="hidden" name="next" value="" />
+    </form>
+</div>
+{% endblock %}
