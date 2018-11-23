@@ -101,8 +101,9 @@
                 <a href="">
                     {% include 'accounts/pfp.html' %}
                     <span>
-                        {% load string_manipulation %}
-                        {{ user.username }} ({{ ""|acronymize:user.groups.all.0 }})
+                        {{ user.username }}
+                        {% load groups_tags %}
+                        ({{ user|get_group_initials }})
                     </span>
                 </a>
             </span>

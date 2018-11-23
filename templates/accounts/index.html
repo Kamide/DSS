@@ -20,7 +20,8 @@
         {% include 'accounts/pfp.html' %}
         <ul class="spacious bulletless">
             <li>Greetings, <a href="">{{ user }}</a>.</li>
-            <li>Group: {{ user.groups.all.0 }}</li>
+            {% load groups_tags %}
+            <li>Group: {{ user|get_group_name }}</li>
             {% if user.profile.interests != '' %}
                 <li>Interests: {{ user.profile.interests }}</li>
             {% else %}
