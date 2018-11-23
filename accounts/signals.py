@@ -11,12 +11,9 @@ from .models import Profile
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
-        try:
-            gu = Group.objects.get(name='Guest Users')
-        except Group.DoesNotExist:
-            pass
-        else:
-            instance.groups.add(gu)
+        # get_or_create returns a tuple
+        gu, created = Group.objects.get_or_create(name='Guest Users')
+        instance.groups.add(gu)
 
 
 @receiver(post_save, sender=User)
