@@ -8,4 +8,4 @@ class Message(models.Model):
     msg_content = models.TextField(help_text = 'Type message here')
 
     def __str__(self):
-        return str(self.sender) + ' ' + self.receiver + self.msg_content
+        return self.sender.username + ' ' + self.receiver.username + ' ' + self.msg_content

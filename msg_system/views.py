@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.contrib import messages
 from .forms import MessageForm
 
 
@@ -7,7 +8,8 @@ def compose(request):
         message_form = MessageForm(request.POST)
         if message_form.is_valid():
             message_form.save()
-
+            recipient = message_form.cleaned_data.get('receiver')
+            messages.success(request, f'The message to {recipient} has been successfully sent!')
     else:
         message_form = MessageForm()
 
