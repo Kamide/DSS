@@ -28,12 +28,7 @@
                 <li>It appears you have yet to list any of your interests. To do that, click the link at the bottom.</li>
             {% endif %}
         </ul>
-        <p class="footer">
-            <ul class="spacious bulletless">
-                <li><a href="{% url 'mailbox' %}">Check Mailbox</a></li>
-                <li><a href="{% url 'settings' %}">Change Account Settings</a></li>
-            </ul>
-        </p>
+        <p class="footer"><a href="{% url 'settings' %}">Change Account Settings</a></p>
     </div>
 </div>
 
