@@ -12,29 +12,22 @@ def create_user_profile(sender, instance, created, **kwargs):
     will put the user in the 'Super Users' cohort:
         $ python manage.py createsuperuser"""
     if created:
-        Profile.objects.create(user=instance)
-        # get_or_create returns a tuple
-        if instance.is_staff:
-            instance.profile.make_su()
+        if instance.is_staff or instance.is_superuser:
+            Profile.objects.create(user=instance, cohort=Profile.SUPER_USER)
         else:
-            instance.profile.make_gu()
+            Profile.objects.create(user=instance)
         instance.profile.save()
 
 
 @receiver(post_save, sender=Profile)
 def update_user_rights(sender, instance, **kwargs):
-    try:
-        cohort = int(instance.get_cohort_value())
-    except ValueError:
-        cohort = instance.GUEST_USER
-
     # GU
+    instance.user.is_superuser = False
     instance.user.is_staff = False
-    instance.user.if_superuser = False
 
-    if cohort >= instance.ORDINARY_USER:
+    if instance.has_ou_rights():
         instance.user.is_superuser = True
-    if cohort >= instance.SUPER_USER:
+    if instance.has_su_rights():
         instance.user.is_staff = True
 
     instance.user.save()

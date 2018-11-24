@@ -32,11 +32,11 @@ class Profile(models.Model):
     def set_cohort(self, value):
         self.cohort = value
 
-    def get_cohort_value(self):
-        return self.cohort
-
     def get_cohort(self):
         return self.COHORTS[self.cohort][1]
+
+    def get_cohort_value(self):
+        return self.cohort
 
     def is_gu(self):
         return self.cohort == self.GUEST_USER
@@ -46,3 +46,12 @@ class Profile(models.Model):
 
     def is_su(self):
         return self.cohort == self.SUPER_USER
+
+    def has_gu_rights(self):
+        return self.cohort >= self.GUEST_USER
+
+    def has_ou_rights(self):
+        return self.cohort >= self.ORDINARY_USER
+
+    def has_su_rights(self):
+        return self.cohort >= self.SUPER_USER

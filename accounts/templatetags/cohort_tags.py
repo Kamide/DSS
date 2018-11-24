@@ -70,7 +70,7 @@ def is_su(user):
 @register.filter(is_safe=True)
 def has_su_rights(user):
     try:
-        return is_su(user)
+        return user.profile.has_su_rights()
     except AttributeError:
         return False
 
@@ -78,7 +78,7 @@ def has_su_rights(user):
 @register.filter(is_safe=True)
 def has_ou_rights(user):
     try:
-        return is_ou(user) or is_su(user)
+        return user.profile.has_ou_rights()
     except AttributeError:
         return False
 
@@ -86,6 +86,6 @@ def has_ou_rights(user):
 @register.filter(is_safe=True)
 def has_gu_rights(user):
     try:
-        return is_gu(user)
+        return user.profile.has_gu_rights()
     except AttributeError:
         return False
