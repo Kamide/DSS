@@ -14,16 +14,9 @@ form > .form-block {
     margin: 4px 0;
 }
 
-.seamless {
-    margin: 0;
-}
-
-.seamless * {
-    margin: 0;
-}
-
-form, input, button {
+form, input, button, textarea {
     font-size: 1em;
+    font-family: inherit;
     color: inherit;
     box-sizing: border-box
 }
@@ -32,16 +25,21 @@ form, input, button {
     display: block;
 }
 
-input {
+input, textarea {
     max-width: 500px;
     width: 100%;
 }
 
-.wide input {
-    max-width: none;
+.wide input, .wide textarea {
+    max-width: 100%;
 }
 
-button, input {
+textarea {
+    min-width: 2em;
+    min-height: 2em;
+}
+
+button, input, textarea {
     padding: 6px;
     border: thin solid #dedede;
     border-radius: 2px;
@@ -49,15 +47,15 @@ button, input {
     transition: border 0.1s;
 }
 
-input[type=text], input[type=password], input[type=number], input[type=url]  {
+input[type=text], input[type=password], input[type=number], input[type=url], textarea  {
     box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-input:hover, input:focus {
+input:hover, input:focus, textarea:hover, textarea:focus {
     border: thin solid #5da486;
 }
 
-input:invalid:focus, input[type=url]:invalid {
+input:invalid:focus, input[type=url]:invalid, textarea:invalid {
     border: thin solid #ff002c;
 }
 

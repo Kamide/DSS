@@ -15,7 +15,6 @@
             <li><a class="{% if request.resolver_match.url_name == 'about'%}opened{% endif %}" href="{% url 'about' %}">DSS</a></li>
             <li><a class="{% if request.resolver_match.url_name == 'index' or request.resolver_match.url_name == 'home'%}opened{% endif %}" href="{% url 'index' %}">Home</a></li>
             <li><a class="{% if request.resolver_match.url_name == 'docs' %}opened{% endif %}" href="{% url 'docs' %}">Documents</a></li>
-
             {% if user.is_authenticated %}
                 <li><a class="{% if request.resolver_match.url_name == 'users' %}opened{% endif %}" href="{% url 'users' %}">Users</a></li>
                 <li><a href="{% url 'logout' %}">Log Out</a></li>
@@ -24,11 +23,13 @@
                 <li><a class="{% if request.resolver_match.url_name == 'login'%}opened{% endif %}" href="{% url 'login' %}">Log In</a></li>
             {% endif %}
         </ul>
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
+        <div id="alerts">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        </div>
     </div>
     <div id="content">
         {% block content %}{% endblock %}

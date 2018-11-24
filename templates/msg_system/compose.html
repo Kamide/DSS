@@ -11,11 +11,13 @@
     <h1>Compose Message</h1>
 </div>
 <div class="card">
-    <form class="body-text" method = "post">
+    <form class="wide body-text" method = "post">
         {% csrf_token %}
         <div class="form-block">{{ message_form }}</div>
-        <input type="submit" value="Send" />
-        <input type="hidden" name="next" value="" />
+        <div class="form-block">
+            <input type="submit" value="Send" />
+            <input type="hidden" name="next" value="" />
+        </div>
     </form>
 </div>
 {% endblock %}

@@ -1,113 +1,68 @@
-{% extends 'base.html' %}
+{% extends 'search.html' %}
 
 {% block title %}Registered Users{% endblock %}
 {% block head %}
 {% load static %}
-<link type="text/css" rel="stylesheet" href="{% static 'forms.css' %}">
-<link type="text/css" rel="stylesheet" href="{% static 'flexboxes.css' %}">
+{{ block.super }}
 <style>
+    @keyframes magnify {
+       0% {transform: scale(2); }
+       100% {transform: scale(3); }
+    }
     .pfp {
         margin-right: 4px;
         width: 48px;
         height: 48px;
+        z-index: 1;
     }
-    .user-info > span:first-child {
-        flex: 1;
+    .pfp:hover {
+        animation-name: magnify;
+        animation-duration: 2s;
+        animation-fill-mode: forwards;
+        animation-timing-function: steps(1);
     }
-    .user-info > span:not(:last-child) {
-        margin-right: 8px;
-        padding-right: 8px;
-    }
-    .user-info > span:not(:last-child):after {
-        content: "";
-        position: absolute;
-        right: 0;
-        height: 60%;
-        border-right: thin solid #dedede;
-        transform: skew(-8deg);
-    }
-    .user-info > span:hover:after {
-        content: "";
-        display: block;
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        border: thin solid rgba(100, 240, 200, 0.9);
-        border-radius: 4px;
-        box-sizing: border-box;
-        background-color: rgba(223, 255, 229, 0.1);
-        pointer-events: none;
-        transform: skew(0deg);
-    }
-    .paginator .left, .paginator .right {
-        flex: 1;
-    }
-    .paginator .middle {
-        text-align: center;
-    }
-    .paginator .right {
-        text-align: right;
-    }
-    .fancy-button {
-        display: inline-block;
-        position: relative;
-        padding: 6px 12px;
-        border: thin solid rgba(0, 0, 0, 0);
-        border-radius: 6px;
-        transition: border 0.1s, box-shadow 0.1s;
-    }
-    .fancy-button:hover {
-        border: thin solid rgba(100, 240, 200, 0.9);
-        box-shadow: none;
-    }
-    .fancy-button-active {
-        border-radius: 0;
-        box-shadow: 0px 3px 0px rgba(100, 240, 200, 0.9);
-    }
-    #ipp {
-        margin-right: 8px;
+    #you .pfp {
+        border: thin solid #9e9e9e;
     }
 </style>
 {% endblock %}
 
-{% block content %}
-<div class="card">
-    <h1>Search</h1>
-    <form class="body-text" method="get">
-        <div class="form-block wide distributed">
-            <input class="filler" type="text" name="search" value="{{ search }}" />
-            <input type="submit" value="Search" />
-            <input type="hidden" name="count" value="{{ count }}" />
-        </div>
-    </form>
-    <a class="fancy-button" href="{% url 'users' %}">Clear Search Filters</a>
-    <p class="footer">Try searching for a name or an interest, then press enter or search to continue.</p>
-</div>
+{% block filters %}
+    <a class="gel-anchor" href="{% url 'users' %}">Clear Search Filters</a>
+{% endblock %}
 
-<div class="card">
-    <h1>List of Registered Users in our System</h1>
-    <form class="body-text" method="get">
-        <div class="form-block wide distributed">
-            <label id="ipp" for="count">Items per page:</label>
-            <input type="hidden" name="search" value="{{ search }}" />
-            <input id="count" class="filler" type="number" name="count" min="1" step="1" value="{{ count }}" />
-            <input type="submit" value="Change" />
-            <!-- <input type="hidden" name="page" value="{{ list_of_users.number }}" /> -->
-        </div>
-    </form>
+{% block helptext %}
+    Try searching for a name or an interest, then press enter or search to continue.
+{% endblock %}
+
+{% block cardtitle %}
+    List of Registered Users in our System
+{% endblock %}
+
+{% block results %}
     {% for user in list_of_users %}
-        <div class="user-info distributed body-text">
-            <span class="group">
+        <div class="slash-separated distributed body-text">
+            <span {% if user == request.user %}id="you"{% endif %}class="group filler gel-wrapper">
                 <a href="">
                     {% include 'accounts/pfp.html' %}
                     <span>
                         {{ user.username }}
-                        {% load groups_tags %}
-                        ({{ user|get_group_initials }})
+                        {% load cohort_tags %}
+                        ({{ user|get_cohort_initials }})
                     </span>
                 </a>
             </span>
-            <span class="group">
+            {% if request.user|has_su_rights and user != request.user %}
+                <span class="group gel-wrapper">
+                    <a href="">Manage</a>
+                </span>
+            {% endif %}
+            {% if request.user|has_ou_rights and user != request.user %}
+                <span class="group gel-wrapper">
+                    <a href="">Report</a>
+                </span>
+            {% endif %}
+            <span class="group gel-wrapper">
                 <a href="{% url 'compose' %}">Message</a>
             </span>
         </div>
@@ -115,28 +70,11 @@
             <hr />
         {% endif %}
     {% endfor %}
-    <div class="paginator body-text distributed footer">
-        <span class="group left">
-            {% if list_of_users.has_previous %}
-                <a href="?search={{ search }}&count={{ count }}&page=1">&lt;&lt; First</a>
-                    <br />
-                <a href="?search={{ search }}&count={{ count }}&page={{ list_of_users.previous_page_number }}">Previous</a>
-            {% endif %}
-        </span>
-        <span class="group middle">
-            <i>{{ list_of_users.number }} of {{ list_of_users.paginator.num_pages }}</i>
-            <span class="space-above">
-                {% for i in sequence %}
-                    <a class="fancy-button {% if i == list_of_users.number %}fancy-button-active{% endif %}" href="?search={{ search }}&count={{ count }}&page={{ i }}">{{ i }}</a>
-                {% endfor %}
-            </span>
-        </span>
-        <span class="group right">
-            {% if list_of_users.has_next %}
-                <a href="?search={{ search }}&count={{ count }}&page={{ list_of_users.paginator.num_pages }}">Last &gt;&gt;</a>
-                <a href="?search={{ search }}&count={{ count }}&page={{ list_of_users.next_page_number }}">Next</a>
-            {% endif %}
-        </span>
-    </div>
-</div>
+{% endblock %}
+
+{% block paginator %}
+    {% with searchx as search %}
+    {% with list_of_users as list_of_items %}
+        {{ block.super }}
+    {% endwith %}{% endwith %}
 {% endblock %}

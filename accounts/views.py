@@ -9,6 +9,10 @@ from .forms import UpdateProfileForm
 
 
 def index(request):
+    # For debugging messages
+    # messages.success(request, f'1')
+    # messages.error(request, f'2')
+    # messages.info(request, f'3')
     return render(request, 'accounts/index.html')
 
 
@@ -33,6 +37,7 @@ def settings(request):
         if profile_form.is_valid():
             profile_form.save()
             messages.success(request, f'Your profile settings have been saved!')
+            return redirect('index')
     else:
         profile_form = UpdateProfileForm(instance=request.user.profile)
 
