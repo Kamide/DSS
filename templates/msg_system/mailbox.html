@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}DSS - Mailbox{% endblock %}
+{% comment %}
+{% block head %}
+{% load static %}
+<link type="text/css" rel="stylesheet" href="{% static 'forms.css' %}">
+{% endblock %}
+{% endcomment %}
+
+{% block content %}
+<div class="card">
+    <h1>Mailbox</h1>
+</div>
+
+<div class="card">
+    <h2>Inbox</h2>
+    {% if inbox_qs.count < 1 %}
+        <p>No new messages</p>
+    {% else %}
+        {% for msg in inbox_qs %}
+            <span class="group">
+                <p><span>
+                    <ul>
+                        <li>{{ msg.sender }}</li>
+                        <li>{{ msg.msg_content }}</li>
+                    </ul>
+                </span></p>
+            </span>
+        {% endfor %}
+    {% endif %}
+</div>
+
+<div class="card">
+    <h2>Sent</h2>
+    {% if sent_qs.count < 1 %}
+        <p>No sent messages</p>
+    {% else %}
+        {% for msg in sent_qs %}
+            <span class="group">
+                <p><span>
+                    <ul>
+                        <li>{{ msg.receiver }}</li>
+                        <li>{{ msg.msg_content }}</li>
+                    </ul>
+                </span></p>
+            </span>
+        {% endfor %}
+    {% endif %}
+</div>
+
+{% comment %}
+<div class="card">
+    <form class="body-text" method = "post">
+        {% csrf_token %}
+        <div class="form-block">{{ message_form }}</div>
+        <input type="submit" value="Send" />
+        <input type="hidden" name="next" value="" />
+    </form>
+</div>
+{% endcomment %}
+{% endblock %}
