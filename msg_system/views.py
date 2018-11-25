@@ -10,7 +10,9 @@ def compose(request):
     if request.method == "POST":
         message_form = MessageForm(request.POST)
         if message_form.is_valid():
-            message_form.save()
+            msg = message_form.save(commit = False)
+            msg.sender = request.user
+            msg.save()
             recipient = message_form.cleaned_data.get('receiver')
             messages.success(request, f'The message to {recipient} has been successfully sent!')
             return redirect('/')
