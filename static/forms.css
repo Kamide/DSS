@@ -41,9 +41,9 @@ textarea {
 
 button, input, textarea {
     padding: 6px;
-    border: thin solid #dedede;
+    border: thin solid var(--main-border-color, #dedede);
     border-radius: 2px;
-    background-color: #fefefe;
+    background-color: var(--main-bg-color, #fefefe);
     transition: border 0.1s;
 }
 
@@ -52,11 +52,11 @@ input[type=text], input[type=password], input[type=number], input[type=url], tex
 }
 
 input:hover, input:focus, textarea:hover, textarea:focus {
-    border: thin solid #5da486;
+    border: thin solid var(--link-color-emphasis, #5da486);
 }
 
 input:invalid:focus, input[type=url]:invalid, textarea:invalid {
-    border: thin solid #ff002c;
+    border: thin solid var(--link-color-invalid, #ff002c);
 }
 
 button, input[type=submit] {
