@@ -5,36 +5,37 @@
 {% load static %}
 <link type="text/css" rel="stylesheet" href="{% static 'forms.css' %}">
 {% endblock %}
+{% block msgs %}
+    {% if form.errors %}
+        <div class="alert alert-error">The entered combination of username and password did not match any of our existing records. Please try again.</div>
+        {% endif %}
+{% endblock %}
 
 {% block content %}
 <div class="card">
     <h1>Log In</h1>
     {% if user.is_authenticated %}
-    {% include './already_logged_in.html' %}
+        {% include './already_logged_in.html' %}
     {% else %}
-    <form class="body-text" method="post" action="{% url 'login' %}">
-        {% csrf_token %}
-        <div class="form-block">
-            {{ form.username.label_tag }}
-            {{ form.username }}
-        </div>
-        <div class="form-block">
-            {{ form.password.label_tag }}
-            {{ form.password }}
-        </div>
-        <div class="form-block">
-            <input type="submit" value="Log In" />
-            <input type="hidden" name="next" value="{{ next }}" />
-        </div>
-    </form>
+        <form class="body-text" method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            <div class="form-block">
+                {{ form.username.label_tag }}
+                {{ form.username }}
+            </div>
+            <div class="form-block">
+                {{ form.password.label_tag }}
+                {{ form.password }}
+            </div>
+            <div class="form-block">
+                <input type="submit" value="Log In" />
+                <input type="hidden" name="next" value="{{ next }}" />
+            </div>
+        </form>
 
-    <p class="footer">
-    {% if form.errors %}
-        The entered combination of username and password did not match any of our existing records. Please try again.
-    {% else %}
-        Don't have an account? Click <a href="{% url 'signup' %}">here</a> to sign up.
-    {% endif %}
-    </p>
+        <p class="footer">
+            Don't have an account? Click <a href="{% url 'signup' %}">here</a> to sign up.
+        </p>
     {% endif %}
 </div>
 {% endblock %}

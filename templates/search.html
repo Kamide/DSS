@@ -43,7 +43,6 @@
         <span class="group filler left">
             {% if list_of_items.has_previous %}
                 <a href="?search={{ search }}&count={{ count }}&page=1">&lt;&lt; First</a>
-                    <br />
                 <a href="?search={{ search }}&count={{ count }}&page={{ list_of_items.previous_page_number }}">Previous</a>
             {% endif %}
         </span>

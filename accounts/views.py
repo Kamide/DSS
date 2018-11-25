@@ -24,6 +24,8 @@ def signup(request):
             username = form.cleaned_data.get('username')
             messages.success(request, f'Your account {username} has been successfully created. You may now log in.')
             return redirect('login')
+        else:
+            messages.info(request, f'Please read over the username and password requirements, thank you.')
     else:
         form = UserCreationForm()
 
