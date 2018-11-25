@@ -4,17 +4,47 @@
 
 {% block content %}
 {% if user.is_authenticated %}
-<div class="card">
     {% load cohort_tags %}
     {% if user|is_gu %}
-    <h1>Popular Documents</h1>
-    <p>3 MOST POPULAR DOCUMENTS WILL GO HERE (YOU ARE A GU)</p>
+        <div class="card">
+        <h1>Popular Documents</h1>
+            {% for doc in docs %}
+                <article class="media content-section">
+                    <img class="rounded-circle article-img" src="{{ doc.owner.profile.image.url }}">
+                    <div class="media-body">
+                        <div class="article-metadata">
+                        <a class="mr-2" href="#">{{doc.owner }}</a>
+                        </div>
+                        <h2><a class="article-title" href="{% url 'doc-detail' doc.id %}">{{ doc.title }}</a></h2>
+                        <p class="article-content">Privacy: {{ doc.privacy }}</p>
+                        <p class="article-content">Number of Views: {{ doc.view_count }}</p>
+                    </div>
+                </article>
+            {% endfor %}
+        </div>
     {% else %}
+    <div class="card">
+        <h1>Create New Doc</h1>
+        <a class="{% if request.resolver_match.url_name == 'users' %}opened{% endif %}" href="{% url 'doc-create' %}">New Doc</a>
+    </div>
+    <div class="card">
     <h1>Recent Documents</h1>
-    <p>YOU 3 MOST RECENTLY EDITED DOCUMENTS (YOU ARE AN OU OR A SU)</p>
-    <div>CREATE NEW DOCUMENT</div>
+        {% for doc in docs %}
+            <article class="media content-section">
+                <img class="rounded-circle article-img" src="{{ doc.owner.profile.image.url }}">
+                <div class="media-body">
+                    <div class="article-metadata">
+                    <a class="mr-2" href="#">{{doc.owner }}</a>
+                    </div>
+                    <h2><a class="article-title" href="{% url 'doc-detail' doc.id %}">{{ doc.title }}</a></h2>
+                    <p class="article-content">Privacy: {{ doc.privacy }}</p>
+                    <p class="article-content">Number of Views: {{ doc.view_count }}</p>
+                </div>
+            </article>
+        {% endfor %}
+    </div>
     {% endif %}
-</div>
+
 {% else %}
 {% include 'registration/please_log_in.html' %}
 {% endif %}

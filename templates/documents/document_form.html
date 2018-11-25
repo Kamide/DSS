@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Create New Document{% endblock %}
+{% block head %}
+{% load static %}
+<link type="text/css" rel="stylesheet" href="{% static 'forms.css' %}">
+<style>
+    .helptext {
+        display: block;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Create New Doc</h1>
+    <form class="body-text" method="post">
+            {% csrf_token %}
+            <div class="form-block">{{ form }}</div>
+            <div class="form-block">
+                <input type="submit" value="Post" />
+                <input type="hidden" name="next" value="{{ next }}" />
+            </div>
+    </form>
+</div>
+{% endblock %}

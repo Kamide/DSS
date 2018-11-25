@@ -1,9 +1,19 @@
 /* Arafat Arman, Kangming Deng, Andy Li */
 
+:root {
+    --main-bg-color: #fefefe;
+    --main-fg-color: #3d3d3d;
+    --main-border-color: #dedede;
+
+    --link-color: #5d92a4;
+    --link-color-invalid: #ff002c;
+    --link-color-emphasis: #5da486;
+}
+
 body, h1, h2, h3, h4, h5, h6, p, #nav {
     margin: 0;
     padding: 0;
-    color: #3d3d3d;
+    color: var(--main-fg-color, #3d3d3d);
 }
 
 body {
@@ -37,10 +47,6 @@ p, .spacious {
     padding: 0;
 }
 
-#nav, .card {
-    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
-}
-
 #header {
     font-size: 1.75rem;
     z-index: 1;
@@ -51,11 +57,16 @@ p, .spacious {
 }
 
 #nav {
-    display: grid;
+    display: flex;
+    flex-direction: column;
     position: relative;
-    grid-template-columns: 1fr;
-    background-color: #fefefe;
+    background-color: var(--main-bg-color, #fefefe);
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
     z-index: 1;
+}
+
+#nav li {
+    flex: 1;
 }
 
 #nav a {
@@ -73,22 +84,22 @@ p, .spacious {
     content: "";
     display: block;
     position: absolute;
+    width: 0;
     bottom: 0;
     left: 0;
-    width: 0;
     height: 4px;
     border-radius: 2px;
-    background-color: cyan;
+    background-color: var(--main-fg-color, #3d3d3d);
+    transition: left 0.1s, width 0.1s;
 }
 
 #nav a:hover, #nav .opened {
-    color: #3d3d3d;
+    color: var(--main-fg-color, #3d3d3d);
 }
 
 #nav a:hover::after, #nav .opened::after {
     width: 100%;
-    background-color: #3d3d3d;
-    transition: width 0.2s, background-color 0.6s;
+    left: 0;
 }
 
 @keyframes grow-shrink {
@@ -109,7 +120,7 @@ p, .spacious {
 .alert {
     width: 100%;
     overflow: hidden;
-    color: #fefefe;
+    color: var(--main-bg-color, #fefefe);
     text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.75), 0px 2px 1px rgba(0, 0, 0, 0.5);
     animation-name: grow-shrink;
     animation-duration: 4s;
@@ -141,20 +152,21 @@ p, .spacious {
     padding: 8px;
     border-width: thin 0;
     border-style: solid;
-    border-color: #dedede;
-    background-color: #fefefe;
+    border-color: var(--main-border-color, #dedede);
+    background-color: var(--main-bg-color, #fefefe);
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.05);
 }
 
 .card a {
     font-weight: bold;
     text-decoration: none;
-    color: #5d92a4;
+    color: var(--link-color, #5d92a4);
 }
 
 .card a:hover {
     text-decoration: underline;
     text-decoration-skip-ink: auto;
-    color: #5da486;
+    color: var(--link-color-emphasis, #5da486);
 }
 
 .card ul {
@@ -163,21 +175,21 @@ p, .spacious {
 
 hr {
     border: none;
-    border-bottom: thin solid #dedede;
+    border-bottom: thin solid var(--main-border-color, #dedede);
 }
 
 .footer {
     padding: 16px 8px 0px 8px;
-    border-top: thin solid #dedede;
+    border-top: thin solid var(--main-border-color, #dedede);
     border-radius: 8px;
     background-image: linear-gradient(rgba(0, 0, 0, 0.02), transparent);
 }
 
 .pfp {
-    border: thin solid #dedede;
+    border: thin solid var(--main-border-color, #dedede);
     border-radius: 4px;
     background-image: radial-gradient(white, transparent);
-    box-shadow: 0px 2px 2px #dedede;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
 }
 
 @media only screen and (min-width: 500px) {
@@ -190,7 +202,7 @@ hr {
         top: 0;
     }
     #nav {
-        grid-template-columns: repeat(5, auto);
+        flex-direction: row;
         background-color: transparent;
         background-image: linear-gradient(rgba(254, 254, 254, 0.8), rgba(245, 245, 245, 1));
     }
@@ -198,13 +210,16 @@ hr {
         padding-left: 0;
         text-align: center;
     }
+    #nav a::after {
+        left: 50%;
+    }
     #alerts {
         position: absolute;
         top: auto;
         z-index: 0;
     }
     .card {
-        border: thin solid #dedede;
+        border: thin solid var(--main-border-color, #dedede);
         border-radius: 4px;
         background-color: rgba(254, 254, 254, 0.8);
     }

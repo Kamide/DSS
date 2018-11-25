@@ -1,5 +1,5 @@
 .gel-anchor, .gel-wrapper, .gel-wrapper::after {
-    border: thin solid rgba(0, 0, 0, 0);
+    border: thin solid transparent;
     border-radius: 4px;
 }
 
