@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete Post{% endblock %}
+{% block head %}
+{% load static %}
+<link type="text/css" rel="stylesheet" href="{% static 'forms.css' %}">
+<style>
+    .helptext {
+        display: block;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Delete Post</h1>
+    <h2>This post cannot be recovered. Do you still want to delete "{{ object.title }}"?</h2>
+    <form class="body-text" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <button class="btn btn-outline-danger" type="submit">Delete</button>
+                <a class="btn btn-outline-secondary" href="{% url 'doc-detail' object.id %}">Cancel</a>
+            </div>
+    </form>
+</div>
+{% endblock %}
