@@ -2,7 +2,6 @@
 
 {% block title %}Registered Users{% endblock %}
 {% block head %}
-{% load static %}
 {{ block.super }}
 <style>
     @keyframes magnify {
@@ -10,16 +9,17 @@
        100% {transform: scale(3); }
     }
     .pfp {
+        position: relative;
         margin-right: 4px;
         width: 48px;
         height: 48px;
-        z-index: 1;
     }
     .pfp:hover {
         animation-name: magnify;
         animation-duration: 2s;
         animation-fill-mode: forwards;
         animation-timing-function: steps(1);
+        z-index: 1;
     }
     #you .pfp {
         border: thin solid #9e9e9e;
@@ -73,8 +73,7 @@
 {% endblock %}
 
 {% block paginator %}
-    {% with searchx as search %}
     {% with list_of_users as list_of_items %}
         {{ block.super }}
-    {% endwith %}{% endwith %}
+    {% endwith %}
 {% endblock %}

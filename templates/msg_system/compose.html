@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}DSS - Compose Message{% endblock %}
+{% block title %}Compose Message{% endblock %}
 {% block head %}
 {% load static %}
 <link type="text/css" rel="stylesheet" href="{% static 'forms.css' %}">
@@ -9,8 +9,6 @@
 {% block content %}
 <div class="card">
     <h1>Compose Message</h1>
-</div>
-<div class="card">
     <form class="wide body-text" method = "post">
         {% csrf_token %}
         <div class="form-block">{{ message_form }}</div>

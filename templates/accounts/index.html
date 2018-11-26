@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}DSS - Home{% endblock %}
+{% block title %}Home{% endblock %}
 {% block head %}
 <style>
     .pfp {
@@ -13,36 +13,36 @@
 {% endblock %}
 
 {% block content %}
-{% if user.is_authenticated %}
-<div class="card">
-    <h1>My Account Information</h1>
-    <div>
-        {% include 'accounts/pfp.html' %}
-        <ul class="spacious bulletless">
-            <li>Greetings, <a href="">{{ user }}</a>.</li>
-            {% load cohort_tags %}
-            <li>Group: {{ user|get_cohort_pluralized }}</li>
-            {% if user.profile.interests != '' %}
-                <li>Interests: {{ user.profile.interests }}</li>
-            {% else %}
-                <li>It appears you have yet to list any of your interests. To do that, click the link at the bottom.</li>
-            {% endif %}
-        </ul>
-        <ul class="footer spacious bulletless">
-            <li><a href="{% url 'mailbox' %}">Check Mailbox</a></li>
-            <li><a href="{% url 'settings' %}">Change Account Settings</a></li>
-        </ul>
-    </div>
-</div>
+    {% if user.is_authenticated %}
+        <div class="card">
+            <h1>My Account Information</h1>
+            <div>
+                {% include 'accounts/pfp.html' %}
+                <ul class="spacious bulletless">
+                    <li>Greetings, <a href="">{{ user }}</a>.</li>
+                    {% load cohort_tags %}
+                    <li>Group: {{ user|get_cohort_pluralized }}</li>
+                    {% if user.profile.interests != '' %}
+                        <li>Interests: {{ user.profile.interests }}</li>
+                    {% else %}
+                        <li>It appears you have yet to list any of your interests. To do that, click the link at the bottom.</li>
+                    {% endif %}
+                </ul>
+                <ul class="footer spacious bulletless">
+                    <li><a href="{% url 'mailbox' %}">Check Mailbox</a></li>
+                    <li><a href="{% url 'settings' %}">Change Account Settings</a></li>
+                </ul>
+            </div>
+        </div>
 
-<div class="card">
-    <h1>My Recent Documents</h1>
-</div>
+        <div class="card">
+            <h1>My Recent Documents</h1>
+        </div>
 
-<div class="card">
-    <h1>Documents Shared With Me</h1>
-</div>
-{% else %}
-{% include 'registration/please_log_in.html' %}
-{% endif %}
+        <div class="card">
+            <h1>Documents Shared With Me</h1>
+        </div>
+    {% else %}
+        {% include 'registration/please_log_in.html' %}
+    {% endif %}
 {% endblock %}

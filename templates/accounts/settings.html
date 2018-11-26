@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}DSS - Profile{% endblock %}
+{% block title %}Settings{% endblock %}
 {% block head %}
 {% load static %}
 <link type="text/css" rel="stylesheet" href="{% static 'forms.css' %}">
@@ -11,6 +11,7 @@
     <h1>Account Settings</h1>
     <p><a href="{% url 'password_change' %}">Change Password</a></p>
 </div>
+
 <div class="card">
     <h1>Profile Settings</h1>
     <form class="body-text" method="post">

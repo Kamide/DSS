@@ -1,51 +1,92 @@
-{% extends 'base.html' %}
+{% extends 'search.html' %}
 
-{% block title %}DSS - Documents{% endblock %}
+{% block title %}Documents{% endblock %}
+{% block head %}
+{{ block.super }}
+{% load static %}
+<link type="text/css" rel="stylesheet" href="{% static 'grids.css' %}">
+<style>
+    .pfp {
+        position: relative;
+        margin-right: 4px;
+        width: 48px;
+        height: 48px;
+    }
+</style>
+{% endblock %}
+
+{% block filters %}
+    <a class="gel-anchor" href="{% url 'docs' %}">Clear Search Filters</a>
+{% endblock %}
+
+{% block helptext %}
+    Try searching for a title, author, and or content of a document, then press enter or search to continue.
+{% endblock %}
 
 {% block content %}
-{% if user.is_authenticated %}
-    {% load cohort_tags %}
-    {% if user|is_gu %}
-        <div class="card">
-        <h1>Popular Documents</h1>
-            {% for doc in docs %}
-                <article class="media content-section">
-                    <img class="rounded-circle article-img" src="{{ doc.owner.profile.image.url }}">
-                    <div class="media-body">
-                        <div class="article-metadata">
-                        <a class="mr-2" href="#">{{doc.owner }}</a>
-                        </div>
-                        <h2><a class="article-title" href="{% url 'doc-detail' doc.id %}">{{ doc.title }}</a></h2>
-                        <p class="article-content">Privacy: {{ doc.privacy }}</p>
-                        <p class="article-content">Number of Views: {{ doc.view_count }}</p>
-                    </div>
-                </article>
-            {% endfor %}
-        </div>
-    {% else %}
-    <div class="card">
-        <h1>Create New Doc</h1>
-        <a class="{% if request.resolver_match.url_name == 'users' %}opened{% endif %}" href="{% url 'doc-create' %}">New Doc</a>
-    </div>
-    <div class="card">
-    <h1>Recent Documents</h1>
-        {% for doc in docs %}
-            <article class="media content-section">
-                <img class="rounded-circle article-img" src="{{ doc.owner.profile.image.url }}">
-                <div class="media-body">
-                    <div class="article-metadata">
-                    <a class="mr-2" href="#">{{doc.owner }}</a>
-                    </div>
-                    <h2><a class="article-title" href="{% url 'doc-detail' doc.id %}">{{ doc.title }}</a></h2>
-                    <p class="article-content">Privacy: {{ doc.privacy }}</p>
-                    <p class="article-content">Number of Views: {{ doc.view_count }}</p>
-                </div>
-            </article>
-        {% endfor %}
-    </div>
-    {% endif %}
+    {% if user.is_authenticated %}
+        {% block search %}
+            {{ block.super }}
+        {% endblock %}
 
-{% else %}
-{% include 'registration/please_log_in.html' %}
-{% endif %}
+        {% load cohort_tags %}
+        {% if user|is_gu %}
+            <div class="card blend">
+                <h1>Popular Documents</h1>
+                    <hr />
+                <div class="gallery">
+                    {% for doc in docs %}
+                        <div class="card">
+                            {% include 'accounts/pfp.html' with user=doc.owner %}
+                            <div class="media-body">
+                                <div class="article-metadata">
+                                <a class="mr-2" href="#">{{ doc.owner }}</a>
+                                </div>
+                                <h2><a class="article-title" href="{% url 'doc-detail' doc.id %}">{{ doc.title }}</a></h2>
+                                <p class="article-content">Privacy: {{ doc.privacy }}</p>
+                                <p class="article-content">Number of Views: {{ doc.view_count }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% else %}
+            <div class="card">
+                <h1>Create New Doc</h1>
+                <div class="body-text"><a class="gel-anchor" href="{% url 'doc-create' %}">New Doc</a></div>
+            </div>
+            <div class="card blend">
+                <h1>Recent Documents</h1>
+                    <hr />
+                <div class="gallery">
+                    {% for doc in docs %}
+                        <div class="card">
+                            {% include 'accounts/pfp.html' with user=doc.owner %}
+                            <div class="media-body">
+                                <div class="article-metadata">
+                                <a class="mr-2" href="#">{{ doc.owner }}</a>
+                                </div>
+                                <h2><a class="article-title" href="{% url 'doc-detail' doc.id %}">{{ doc.title }}</a></h2>
+                                <p class="article-content">Privacy: {{ doc.privacy }}</p>
+                                <p class="article-content">Number of Views: {{ doc.view_count }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                    <hr />
+                <div class="width-trimmed">
+                    {% block limiter %}
+                        {{ block.super }}
+                    {% endblock %}
+                </div>
+                {% block paginator %}
+                    {% with page_obj as list_of_items %}
+                        {{ block.super }}
+                    {% endwith %}
+                {% endblock %}
+            </div>
+        {% endif %}
+    {% else %}
+        {% include 'registration/please_log_in.html' %}
+    {% endif %}
 {% endblock %}

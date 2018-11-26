@@ -14,10 +14,17 @@ class DocListView(ListView):
     template_name = 'documents/docs.html'
     context_object_name = 'docs'
     ordering = ['-edit_count']
+    paginate_by = 10
 
 
 class DocDetailView(DetailView):
     model = Document
+
+    def get_context_data(self, **kwargs):
+        doc = self.get_object()
+        doc.view_count += 1
+        doc.save()
+        return super().get_context_data(**kwargs)
 
 
 class DocCreateView(LoginRequiredMixin, CreateView):

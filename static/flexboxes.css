@@ -35,7 +35,7 @@
     text-align: right;
 }
 
-@media only screen and (min-width: 500px) {
+@media only screen and (min-width: 512px) {
     .distributed {
         flex-direction: row;
     }

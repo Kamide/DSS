@@ -7,6 +7,8 @@ from django.contrib.auth.decorators import login_required
 
 
 def compose(request):
+    prefilled_msg = request.GET.get('showthis')
+
     if request.method == "POST":
         message_form = MessageForm(request.POST)
         if message_form.is_valid():
@@ -17,7 +19,10 @@ def compose(request):
             messages.success(request, f'The message to {recipient} has been successfully sent!')
             return redirect('/')
     else:
-        message_form = MessageForm()
+        if prefilled_msg is None:
+            message_form = MessageForm() #Type message here
+        else:
+            message_form = MessageForm(initial={'msg_content': prefilled_msg})
 
     context = {'message_form': message_form}
 
