@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.contrib import messages
 from .models import Document
 
 
@@ -20,10 +21,16 @@ class DocDetailView(DetailView):
     model = Document
 
     def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         doc = self.get_object()
         doc.view_count += 1
         doc.save(update_fields=['view_count'])
-        return super().get_context_data(**kwargs)
+        can_edit = doc.users_that_write.filter(id=self.request.user.id)
+        if can_edit.exists():
+            context['canedit'] = True
+        else:
+            context['canedit'] = False
+        return context
 
 
 class DocCreateView(LoginRequiredMixin, CreateView):
@@ -70,6 +77,21 @@ class DocInviteView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
         if pending.exists():
             return True
         return False
+
+    def post(self, request, *args, **kwargs):
+        doc = self.get_object()
+        if request.POST.get("Accepted"):
+            doc.pending_contributors.remove(self.request.user)
+            doc.users_that_write.add(self.request.user)
+            doc.save()
+            messages.success(request, f'Accepted')
+            return redirect('docs')
+        elif request.POST.get("Denied"):
+            doc.pending_contributors.remove(self.request.user)
+            messages.success(request, f'Denied')
+            doc.save()
+            return redirect('docs')
+        return redirect('docs')
 
 
 def docs(request):

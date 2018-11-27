@@ -19,7 +19,7 @@ class Document(models.Model):
     pending_contributors = models.ManyToManyField(User, related_name="Invited")
 
     def __str__(self):
-        return self.owner + self.title
+        return self.title
 
     def get_absolute_url(self):
         return reverse('doc-detail', kwargs={'pk': self.pk})

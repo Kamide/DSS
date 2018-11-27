@@ -18,8 +18,8 @@
     <form class="body-text" method="post">
             {% csrf_token %}
             <div class="form-group">
-                <a class="btn btn-outline-secondary" href="{% url 'doc-detail' object.id %}">Accept</a>
-                <a class="btn btn-outline-secondary" href="/">Deny</a>
+                <button type="submit" name="Accepted" value="Accept">Accept</button>
+                <button type="submit" name="Denied" value="Deny">Deny</button>
             </div>
     </form>
 </div>
