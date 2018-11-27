@@ -1,0 +1,21 @@
+{% extends 'msg_system/mailbox.html' %}
+
+{% block title %}Sent{% endblock %}
+
+{% block box %}
+    {% if sent_qs.count < 1 %}
+        <p>No sent messages</p>
+    {% else %}
+        {% for msg in sent_qs %}
+            <span class="group">
+                <p><span>
+                    <ul>
+                        <li><b>{{ msg.receiver }}</b></li>
+                        <li><b>{{ msg.reason }}</b></li>
+                        <li>{{ msg.msg_content }}</li>
+                    </ul>
+                </span></p>
+            </span>
+        {% endfor %}
+    {% endif %}
+{% endblock %}

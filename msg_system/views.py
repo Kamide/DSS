@@ -35,17 +35,29 @@ def compose(request):
 
 
 def mailbox(request):
+    return render(request, "msg_system/mailbox.html")
 
+
+def inbox(request):
     current_user = request.user.id
-
-    #Inbox
     inbox_qs = Message.objects.all().filter(receiver = current_user)
 
-    #Sent
-    sent_qs = Message.objects.all().filter(sender = current_user)
+    #if(request.method == 'POST'):
 
-    context = {
-        "inbox_qs": inbox_qs,
-        "sent_qs": sent_qs
-    }
-    return render(request, "msg_system/mailbox.html", context)
+
+    context = {"inbox_qs": inbox_qs}
+    return render(request, "msg_system/inbox.html", context)
+
+
+def sent(request):
+    current_user = request.user.id
+    sent_qs = Message.objects.all().filter(sender = current_user)
+    context = {"sent_qs": sent_qs}
+    return render(request, "msg_system/sent.html", context)
+
+
+def archive(request):
+    current_user = request.user.id
+    archive_qs = Message.objects.all().filter(receiver = current_user).filter(receiver_archive = True)
+    context = {"archive_qs": archive_qs}
+    return render(request, "msg_system/archive.html", context)

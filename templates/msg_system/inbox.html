@@ -1,0 +1,22 @@
+{% extends 'msg_system/mailbox.html' %}
+
+{% block title %}Inbox{% endblock %}
+
+{% block box %}
+    {% if inbox_qs.count < 1 %}
+        <p>No new messages</p>
+    {% else %}
+        {% for msg in inbox_qs %}
+            <span class="group">
+                <p><span>
+                    <ul>
+                        <li><b>{{ msg.sender }}</b></li>
+                        <li><b>{{ msg.reason }}</b></li>
+                        <li>{{ msg.msg_content }}</li>
+                    </ul>
+                    <input type = "submit" value = 'Archive'>
+                </span></p>
+            </span>
+        {% endfor %}
+    {% endif %}
+{% endblock %}
