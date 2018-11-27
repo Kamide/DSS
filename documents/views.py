@@ -13,8 +13,7 @@ class DocListView(ListView):
     model = Document
     template_name = 'documents/docs.html'
     context_object_name = 'docs'
-    ordering = ['-edit_count']
-    paginate_by = 10
+    ordering = ['-view_count']
 
 
 class DocDetailView(DetailView):
@@ -23,7 +22,7 @@ class DocDetailView(DetailView):
     def get_context_data(self, **kwargs):
         doc = self.get_object()
         doc.view_count += 1
-        doc.save()
+        doc.save(update_fields=['view_count'])
         return super().get_context_data(**kwargs)
 
 
@@ -57,7 +56,18 @@ class DocDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def test_func(self):
         doc = self.get_object()
-        if self.request.user == doc.owner or self.request.user in doc.users_that_write.all():
+        if self.request.user == doc.owner:
+            return True
+        return False
+
+
+class DocInviteView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
+    model = Document
+
+    def test_func(self):
+        doc = self.get_object()
+        pending = doc.pending_contributors.filter(id=self.request.user.id)
+        if pending.exists():
             return True
         return False
 

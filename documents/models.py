@@ -16,6 +16,7 @@ class Document(models.Model):
     view_count = models.IntegerField(default=000)
     users_that_read = models.ManyToManyField(User, related_name="Readers")
     users_that_write = models.ManyToManyField(User, related_name="Contributors")
+    pending_contributors = models.ManyToManyField(User, related_name="Invited")
 
     def __str__(self):
         return self.owner + self.title

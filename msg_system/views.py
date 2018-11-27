@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import MessageForm
 from msg_system.models import Message
+from documents.models import Document
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 
@@ -17,6 +18,10 @@ def compose(request):
             msg.save()
             recipient = message_form.cleaned_data.get('receiver')
             messages.success(request, f'The message to {recipient} has been successfully sent!')
+
+            if prefilled_msg is not None:
+                doc = Document.objects.get(pk=''.join(filter(lambda x: x.isdigit(), prefilled_msg)))
+                doc.pending_contributors.add(msg.receiver)
             return redirect('/')
     else:
         if prefilled_msg is None:
