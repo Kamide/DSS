@@ -32,6 +32,23 @@ class DocDetailView(DetailView):
             context['canedit'] = False
         return context
 
+    def post(self, request, *args, **kwargs):
+        doc = self.get_object()
+        if request.POST.get("Lock"):
+            doc.lock_status = True
+            doc.locked_by = self.request.user.username
+            doc.save()
+            messages.success(request, f'Document Successfully Locked')
+        elif request.POST.get("Unlock"):
+            if self.request.user.username == doc.locked_by:
+                doc.lock_status = False
+                doc.locked_by = ""
+                messages.success(request, f'Document Successfully Unlocked')
+                doc.save()
+            else:
+                messages.error(request, f'You did not lock this document initially')
+        return redirect(doc.get_absolute_url())
+
 
 class DocCreateView(LoginRequiredMixin, CreateView):
     model = Document
@@ -85,12 +102,11 @@ class DocInviteView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
             doc.users_that_write.add(self.request.user)
             doc.save()
             messages.success(request, f'Accepted')
-            return redirect('docs')
+            return redirect(doc.get_absolute_url(self))
         elif request.POST.get("Denied"):
             doc.pending_contributors.remove(self.request.user)
             messages.success(request, f'Denied')
             doc.save()
-            return redirect('docs')
         return redirect('docs')
 
 

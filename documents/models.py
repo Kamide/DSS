@@ -11,7 +11,7 @@ class Document(models.Model):
     content = models.TextField()
     version = models.IntegerField(default=000)
     lock_status = models.BooleanField(default=False)
-    locked_by = models.CharField(max_length=30)
+    locked_by = models.TextField()
     edit_count = models.IntegerField(default=000)
     view_count = models.IntegerField(default=000)
     users_that_read = models.ManyToManyField(User, related_name="Readers")

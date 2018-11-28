@@ -4,15 +4,30 @@
         <img class="rounded-circle article-img" src="{{ object.owner.profile.image.url }}">
         <div class="article-metadata">
             <a class="mr-2" href="#">{{object.owner }}</a>
-            {% if object.owner == user or canedit %}
+            {% load cohort_tags %}
+            {% if object.owner == user or canedit or object.privacy == "RESTRICTED" and user|has_ou_rights %}
                 <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'doc-update' object.id %}">Edit</a>
                 {% if object.owner == user and object.privacy == "SHARED" %}
                     <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'compose' %}?&showthis={% url 'doc-invite' object.id %}">Invite Users</a>
                 {% endif %}
-            <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'doc-delete' object.id %}">Delete</a>
+                <p>{{ object.lock_status }}</p>
+                {% if object.privacy == "SHARED" and object.owner == user or canedit %}
+                    <form class="body-text" method="post">
+                        {% csrf_token %}
+                            <div class="form-group">
+                                {% if object.lock_status == False %}
+                                    <button type="submit" name="Lock" value="Locked">Lock</button>
+                                {% else %}
+                                    <button type="submit" name="Unlock" value="Unlocked">Unlock</button>
+                                {% endif %}
+                            </div>
+                    </form>
+                {% endif %}
+                <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'doc-delete' object.id %}">Delete</a>
             {% endif %}
         </div>
-        {% if object.owner == user or canedit %}
+
+        {% if object.owner == user or object.privacy == "PUBLIC" or object.privacy == "RESTRICTED" and user|has_gu_rights or object.privacy == "SHARED" and object.owner == user or canedit %}
             <h2 class="article-title">{{ object.title }}</h2>
             <p class="article-content">{{ object.content }}</p>
         {% else %}
