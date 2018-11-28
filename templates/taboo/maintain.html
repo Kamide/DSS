@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Maintain Taboo List{% endblock %}
+{% comment %}
+{% block head %}
+{% load static %}
+<link type="text/css" rel="stylesheet" href="{% static 'grids.css' %}">
+{% endblock %}
+{% endcomment %}
+
+{% block content %}
+<div class="card blend">
+    <h1>Maintain Taboo List</h1>
+</div>
+
+<div id="header">
+        <ul id="nav" class="bulletless">
+            <li><a class="{% if request.resolver_match.url_name == 'add_word' %}opened{% endif %}" href="{% url 'add_word' %}">Add Word</a></li>
+            <li><a class="{% if request.resolver_match.url_name == 'del_word' %}opened{% endif %}" href="{% url 'del_word' %}">Delete Word</a></li>
+        </ul>
+        <div class="card" style="margin-top: 0;">
+            {% block subcontent %}{% endblock %}
+        </div>
+    {% comment %}
+        <div id="alerts">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+            {% block msgs %}{% endblock %}
+        </div>
+    {% endcomment %}
+</div>
+
+{% comment %}
+<div class="card">
+    <form class="body-text" method = "post">
+        {% csrf_token %}
+        <div class="form-block">{{ message_form }}</div>
+        <input type="submit" value="Send" />
+        <input type="hidden" name="next" value="" />
+    </form>
+</div>
+{% endcomment %}
+{% endblock %}

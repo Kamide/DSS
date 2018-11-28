@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}Taboo List{% endblock %}
+
+{% block content %}
+    <h1>List of Current Taboo Words:</h1>
+    {% if words_qs.count < 1 %}
+        <p>There are no taboo words on the list!</p>
+    {% else %}
+        {% for t in words_qs %}
+            <span class="group">
+                <p><span>
+                    <ul>
+                        <li>{{ t.word }}</li>
+                    </ul>
+                </span></p>
+            </span>
+        {% endfor %}
+    {% endif %}
+    <p>Click <a href="{% url 'users' %}">here</a> to message a suggested word to an SU!</p>
+{% endblock %}

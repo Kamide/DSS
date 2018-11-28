@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'accounts.apps.UsersConfig',
     'documents.apps.DocumentsConfig',
     'msg_system.apps.MsgSystemConfig',
+    'taboo.apps.TabooConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

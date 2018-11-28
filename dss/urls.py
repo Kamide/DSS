@@ -24,6 +24,8 @@ urlpatterns = [
     path('documents/', include('documents.urls')),
     # /accounts/...
     path('accounts/', include('accounts.urls')),
+    # /taboo/...
+    path('taboo/', include('taboo.urls')),
     # /
     path('', views.index, name='home'),
     # /accounts/login/ [name='login']

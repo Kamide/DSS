@@ -30,6 +30,9 @@
                 </ul>
                 <ul class="footer spacious bulletless">
                     <li><a href="{% url 'inbox' %}">Check Mailbox</a></li>
+                    {% if user|is_su %}
+                    <li><a href="{% url 'add_word' %}">Maintain Taboo Words List</a></li>
+                    {% endif %}
                     <li><a href="{% url 'settings' %}">Change Account Settings</a></li>
                 </ul>
             </div>

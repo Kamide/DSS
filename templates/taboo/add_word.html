@@ -1,0 +1,20 @@
+{% extends 'taboo/maintain.html' %}
+
+{% block title %}Add Word{% endblock %}
+{% block head %}
+{% load static %}
+<link type="text/css" rel="stylesheet" href="{% static 'forms.css' %}">
+{% endblock %}
+
+{% block subcontent %}
+<div class="card">
+    <form class="wide body-text" method = "post">
+        {% csrf_token %}
+        <div class="form-block">{{ taboo_form }}</div>
+        <div class="form-block">
+            <input type="submit" value="Add" />
+            <input type="hidden" name="next" value="" />
+        </div>
+    </form>
+</div>
+{% endblock %}

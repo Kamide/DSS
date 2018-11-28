@@ -29,6 +29,12 @@
             {{ block.super }}
         {% endblock %}
 
+        <div class="card">
+            <h1>Taboo Words</h1>
+            <p>Click <a href="{% url 'taboo_list' %}">here</a> to view the current list of taboo words.</p>
+            <p>Remember: abusing taboo words will result in punishment!</p>
+        </div>
+
         {% load cohort_tags %}
         {% if user|is_gu %}
             <div class="card blend">
