@@ -3,6 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib import messages
 from .models import Document
+from accounts.models import Profile
 
 
 def index(request):
@@ -40,7 +41,7 @@ class DocDetailView(DetailView):
             doc.save()
             messages.success(request, f'Document Successfully Locked')
         elif request.POST.get("Unlock"):
-            if self.request.user.username == doc.locked_by:
+            if self.request.user.username == doc.locked_by or self.request.user.profile.is_su():
                 doc.lock_status = False
                 doc.locked_by = ""
                 messages.success(request, f'Document Successfully Unlocked')
