@@ -24,6 +24,7 @@
 {% endblock %}
 
 {% block content %}
+    {% if user.is_authenticated %}
         {% block search %}
             {{ block.super }}
         {% endblock %}
@@ -56,10 +57,10 @@
                 </div>
             </div>
         {% else %}
-            <div class="card">
-                <h1>Create New Doc</h1>
+            <fieldset class="card">
+                <legend><h1>Create New Doc</h1></legend>
                 <div class="body-text"><a class="gel-anchor" href="{% url 'doc-create' %}">New Doc</a></div>
-            </div>
+            </fieldset>
             <div class="card blend">
                 <h1>Recent Documents</h1>
                     <hr />
@@ -79,7 +80,7 @@
                     {% endfor %}
                 </div>
                     <hr />
-                <div class="width-trimmed">
+                <div>
                     {% block limiter %}
                         {{ block.super }}
                     {% endblock %}
@@ -91,4 +92,7 @@
                 {% endblock %}
             </div>
         {% endif %}
+    {% else %}
+        {% include 'registration/please_log_in.html' %}
+    {% endif %}
 {% endblock %}

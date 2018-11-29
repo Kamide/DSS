@@ -6,13 +6,13 @@
     {% if sent_qs.count < 1 %}
         <p>No sent messages</p>
     {% else %}
-        {% for msg in sent_qs %}
+        {% for msg in sent_qs reversed %}
             <span class="group">
                 <p><span>
                     <ul>
                         <li><b>{{ msg.receiver }}</b></li>
                         <li><b>{{ msg.reason }}</b></li>
-                        <li>{{ msg.msg_content }}</li>
+                        <li>{{ msg.msg_content|linebreaks }}</li>
                     </ul>
                 </span></p>
             </span>

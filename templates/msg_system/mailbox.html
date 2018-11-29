@@ -1,19 +1,18 @@
 {% extends 'base.html' %}
 
 {% block title %}Mailbox{% endblock %}
-{% comment %}
 {% block head %}
 {% load static %}
-<link type="text/css" rel="stylesheet" href="{% static 'grids.css' %}">
+<link type="text/css" rel="stylesheet" href="{% static 'widgets.css' %}">
 {% endblock %}
-{% endcomment %}
 
 {% block content %}
-<div class="card blend">
-    <h1>Mailbox</h1>
-</div>
+<fieldset class="card">
+    <legend><h1>Mailbox</h1></legend>
+    <a class="gel-anchor body-text" href="{% url 'compose' %}">Compose New Message</a>
+</fieldset>
 
-<div id="header">
+<div id="header" style="z-index: 0;">
         <ul id="nav" class="bulletless">
             <li><a class="{% if request.resolver_match.url_name == 'inbox'%}opened{% endif %}" href="{% url 'inbox' %}">Inbox</a></li>
             <li><a class="{% if request.resolver_match.url_name == 'sent' %}opened{% endif %}" href="{% url 'sent' %}">Sent</a></li>
@@ -22,16 +21,6 @@
         <div class="card" style="margin-top: 0;">
             {% block box %}{% endblock %}
         </div>
-    {% comment %}
-        <div id="alerts">
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
-            {% block msgs %}{% endblock %}
-        </div>
-    {% endcomment %}
 </div>
 
 {% comment %}

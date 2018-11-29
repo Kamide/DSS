@@ -11,7 +11,7 @@
                     <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'doc-delete' object.id %}">Delete</a>
                 {% endif %}
                     {% if object.owner == user and object.privacy == "SHARED" %}
-                        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'compose' %}?&showthis={% url 'doc-invite' object.id %}">Invite Users</a>
+                        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'compose' %}?&inviteto={{ object.id }}&showthis={% url 'doc-invite' object.id %}">Invite Users</a>
                     {% endif %}
                 {% if object.privacy == "SHARED" and object.owner == user or canedit %}
                     <form class="body-text" method="post">
@@ -32,7 +32,6 @@
         {% if object.owner == user or object.privacy == "PUBLIC" or object.privacy == "RESTRICTED" and user|has_gu_rights or object.privacy == "SHARED" and object.owner == user or canedit %}
             <h2 class="article-title">{{ object.title }}</h2>
             <p class="article-content">{{ object.content }}</p>
-            <p>{{ object.txt.name }}</p>
         {% else %}
             <p>You do not have access to this document. Make sure to check the privacy settings of a document.</p>
         {% endif %}

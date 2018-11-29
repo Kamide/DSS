@@ -1,25 +1,10 @@
-.blend {
-    padding-top: 0;
-    padding-bottom: 0;
-    border-color: transparent;
-    background-color: transparent;
-    box-shadow: none;
-}
-
-.blend > *:first-child {
-    margin-top: 0;
-}
-
-.blend .card {
-    margin: 0;
-}
-
 .gallery {
     display: grid;
     grid-template-columns: repeat(1, 1fr);
 }
 
 .gallery > * {
+    padding: 8px;
     transition: box-shadow 0.1s, filter 0.1s;
 }
 
@@ -39,10 +24,6 @@
         grid-template-columns: repeat(2, 1fr);
         grid-column-gap: 8px;
         grid-row-gap: 8px;
-    }
-
-    .width-trimmed, .gallery {
-        margin: 0 8px;
     }
 }
 
