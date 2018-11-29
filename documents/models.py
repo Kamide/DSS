@@ -9,6 +9,7 @@ class Document(models.Model):
     title = models.CharField(max_length=30, unique=True)
     privacy = models.TextField(max_length=10, choices=PRIVACY_LEVELS)
     content = models.TextField()
+    txt = models.FileField(upload_to='documents/')
     version = models.IntegerField(default=000)
     lock_status = models.BooleanField(default=False)
     locked_by = models.TextField()

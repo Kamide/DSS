@@ -11,7 +11,7 @@ form > .form-block {
 .form-block > p, .form-block > label {
     /* For debugging margins */
     /* border: thick solid red; */
-    margin: 4px 0;
+    margin: 6px 0;
 }
 
 form, input, button, textarea {

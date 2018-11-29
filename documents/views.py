@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib import messages
+from django.core.files.base import ContentFile
 from .models import Document
-from accounts.models import Profile
 
 
 def index(request):
@@ -38,12 +38,14 @@ class DocDetailView(DetailView):
         if request.POST.get("Lock"):
             doc.lock_status = True
             doc.locked_by = self.request.user.username
+            doc.view_count -= 1
             doc.save()
             messages.success(request, f'Document Successfully Locked')
         elif request.POST.get("Unlock"):
             if self.request.user.username == doc.locked_by or self.request.user.profile.is_su():
                 doc.lock_status = False
                 doc.locked_by = ""
+                doc.view_count -= 1
                 messages.success(request, f'Document Successfully Unlocked')
                 doc.save()
             else:
@@ -57,7 +59,11 @@ class DocCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
+        self.object = form.save()
+        doc_txt = ContentFile(self.object.content)
+        self.object.txt.save(self.object.title+'.txt', doc_txt)
         return super().form_valid(form)
+
 
 
 class DocUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -66,6 +72,10 @@ class DocUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
+        self.object = form.save()
+        self.object.txt.delete()
+        doc_txt = ContentFile(self.object.content)
+        self.object.txt.save(self.object.title+'.txt', doc_txt)
         return super().form_valid(form)
 
     def test_func(self):
@@ -82,6 +92,7 @@ class DocDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         doc = self.get_object()
         if self.request.user == doc.owner:
+            doc.txt.delete()
             return True
         return False
 
@@ -103,7 +114,7 @@ class DocInviteView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
             doc.users_that_write.add(self.request.user)
             doc.save()
             messages.success(request, f'Accepted')
-            return redirect(doc.get_absolute_url(self))
+            return redirect(doc.get_absolute_url())
         elif request.POST.get("Denied"):
             doc.pending_contributors.remove(self.request.user)
             messages.success(request, f'Denied')

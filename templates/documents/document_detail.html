@@ -11,7 +11,7 @@
                     <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'doc-delete' object.id %}">Delete</a>
                 {% endif %}
                     {% if object.owner == user and object.privacy == "SHARED" %}
-                        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'compose' %}?&showthis={% url 'doc-invite' object.id %}">Invite Users</a>
+                        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'compose' %}?&inviteto={{ object.id }}&showthis={% url 'doc-invite' object.id %}">Invite Users</a>
                     {% endif %}
                 {% if object.privacy == "SHARED" and object.owner == user or canedit %}
                     <form class="body-text" method="post">
