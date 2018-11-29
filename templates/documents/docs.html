@@ -24,7 +24,6 @@
 {% endblock %}
 
 {% block content %}
-    {% if user.is_authenticated %}
         {% block search %}
             {{ block.super }}
         {% endblock %}
@@ -92,7 +91,4 @@
                 {% endblock %}
             </div>
         {% endif %}
-    {% else %}
-        {% include 'registration/please_log_in.html' %}
-    {% endif %}
 {% endblock %}

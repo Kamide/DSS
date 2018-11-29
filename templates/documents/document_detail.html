@@ -32,6 +32,7 @@
         {% if object.owner == user or object.privacy == "PUBLIC" or object.privacy == "RESTRICTED" and user|has_gu_rights or object.privacy == "SHARED" and object.owner == user or canedit %}
             <h2 class="article-title">{{ object.title }}</h2>
             <p class="article-content">{{ object.content }}</p>
+            <p>{{ object.txt.name }}</p>
         {% else %}
             <p>You do not have access to this document. Make sure to check the privacy settings of a document.</p>
         {% endif %}
