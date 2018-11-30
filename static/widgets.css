@@ -1,3 +1,20 @@
+.collapsed > * {
+    display: none;
+}
+
+.collapsed > *:first-child, .toggler {
+    display: inherit;
+}
+
+.toggler {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 12px;
+    border-radius: 4px;
+    font-family: monospace;
+}
+
 .gel-anchor, .gel-wrapper {
     position: relative;
     border: thin solid transparent;
@@ -34,6 +51,12 @@
 }
 
 @media only screen and (min-width: 512px) {
+    .toggler {
+        margin: 0;
+        border-top: none;
+        border-right: none;
+    }
+
     .slash-separated > span:not(:last-child) {
         margin-right: 16px;
     }

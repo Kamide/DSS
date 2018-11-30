@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans:100,100i,400,400i,700,700i" rel="stylesheet">
     {% block head %}{% endblock %}
   </head>
-  <body>
+  <body onload="{% block onload %}{% endblock %}">
     <div id="header">
         <ul id="nav" class="bulletless">
             <li><a class="{% if request.resolver_match.url_name == 'about'%}opened{% endif %}" href="{% url 'about' %}">DSS</a></li>

@@ -11,13 +11,15 @@
         margin-right: 8px;
     }
 </style>
+<script type="text/javascript" src="{% static 'effects.js' %}"></script>
 {% endblock %}
+{% block onload %}display();{% endblock %}
 
 {% block content %}
     {% block before_search %}{% endblock %}
 
     {% block search %}
-        <div class="card">
+        <div id="search" class="card">
             <h1>Search</h1>
             <form class="body-text" method="get">
                 <div class="form-block wide distributed">
@@ -28,6 +30,7 @@
             </form>
             <div class="body-text">{% block filters %}{% endblock %}</div>
             <p class="footer">{% block helptext %}{% endblock %}</p>
+            <button class="toggler body-text" onclick="expandCollapseParentOf(this);">-</button>
         </div>
     {% endblock %}
 

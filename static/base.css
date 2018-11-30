@@ -2,7 +2,7 @@
 
 :root {
     --html-bg-color: #fbfbfb;
-    /* --html-bg-image: url('noise.png'); */
+    --html-bg-image: url('noise.png');
 
     --main-bg-color: #fefefe;
     --main-fg-color: #3d3d3d;
@@ -21,7 +21,8 @@ html, body, h1, h2, h3, h4, h5, h6, p, #nav {
 
 html {
     background-color: var(--html-bg-color, #fbfbfb);
-    background-image: url('noise.png')
+    background-image: var(--html-bg-image, url('noise.png'));
+    font-size: 16px;
 }
 
 body {
@@ -59,10 +60,6 @@ p, .spacious {
     padding: 0;
 }
 
-#nav, .card {
-    background-color: var(--main-bg-color, #fefefe);
-}
-
 #header {
     font-size: 1.75rem;
     z-index: 1;
@@ -70,6 +67,10 @@ p, .spacious {
 
 #header * {
     box-sizing: border-box;
+}
+
+#nav, .card {
+    background-color: var(--main-bg-color, #fefefe);
 }
 
 #nav {
@@ -165,6 +166,7 @@ p, .spacious {
 }
 
 .card {
+    position: relative;
     margin: 24px 0;
     padding: 8px 12px;
     border-width: thin 0;
@@ -267,4 +269,8 @@ legend {
 
 .blend > *:first-child {
     margin-bottom: -8px;
+}
+
+.blend > *:last-child {
+    margin-bottom: 0;
 }
