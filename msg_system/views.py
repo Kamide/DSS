@@ -14,7 +14,7 @@ def compose(request):
     if request.method == "POST":
         message_form = MessageForm(request.POST)
         if message_form.is_valid():
-            msg = message_form.save(commit = False)
+            msg = message_form.save(commit=False)
             msg.sender = request.user
             msg.save()
             recipient = message_form.cleaned_data.get('receiver')
@@ -53,24 +53,13 @@ def mailbox(request):
 
 def inbox(request):
     current_user = request.user.id
-    inbox_qs = Message.objects.all().filter(receiver = current_user)
-
-    #if(request.method == 'POST'):
-
-
+    inbox_qs = Message.objects.all().filter(receiver=current_user)
     context = {"inbox_qs": inbox_qs}
     return render(request, "msg_system/inbox.html", context)
 
 
 def sent(request):
     current_user = request.user.id
-    sent_qs = Message.objects.all().filter(sender = current_user)
+    sent_qs = Message.objects.all().filter(sender=current_user)
     context = {"sent_qs": sent_qs}
     return render(request, "msg_system/sent.html", context)
-
-
-def archive(request):
-    current_user = request.user.id
-    archive_qs = Message.objects.all().filter(receiver = current_user).filter(receiver_archive = True)
-    context = {"archive_qs": archive_qs}
-    return render(request, "msg_system/archive.html", context)

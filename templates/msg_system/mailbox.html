@@ -16,7 +16,6 @@
         <ul id="nav" class="bulletless">
             <li><a class="{% if request.resolver_match.url_name == 'inbox'%}opened{% endif %}" href="{% url 'inbox' %}">Inbox</a></li>
             <li><a class="{% if request.resolver_match.url_name == 'sent' %}opened{% endif %}" href="{% url 'sent' %}">Sent</a></li>
-            <li><a class="{% if request.resolver_match.url_name == 'archive' %}opened{% endif %}" href="{% url 'archive' %}">Archived</a></li>
         </ul>
         <div class="card" style="margin-top: 0;">
             {% block box %}{% endblock %}
