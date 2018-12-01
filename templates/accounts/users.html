@@ -13,6 +13,7 @@
         margin-right: 4px;
         width: 48px;
         height: 48px;
+        transform-origin: top left;
     }
     .pfp:hover {
         animation-name: magnify;
@@ -22,7 +23,12 @@
         z-index: 1;
     }
     #you .pfp {
-        border: thin solid #9e9e9e;
+        border: thin solid var(--main-border-color-emphasis, #9e9e9e);
+    }
+    @media only screen and (min-width: 512px) {
+        .pfp {
+            transform-origin: center;
+        }
     }
 </style>
 {% endblock %}
@@ -43,7 +49,7 @@
     {% for user in list_of_users %}
         <div class="slash-separated distributed body-text">
             <span {% if user == request.user %}id="you"{% endif %}class="group filler gel-wrapper">
-                <a href="">
+                <a href="{% url 'individuals' user.username %}">
                     {% include 'accounts/pfp.html' %}
                     <span>
                         {{ user.username }}
@@ -54,7 +60,7 @@
             </span>
             {% if request.user|has_su_rights and user != request.user %}
                 <span class="group gel-wrapper">
-                    <a href="">Manage</a>
+                    <a href="{% url 'individuals' user.username %}#actions">Manage</a>
                 </span>
             {% endif %}
             {% if request.user|has_ou_rights and user != request.user %}

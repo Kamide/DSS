@@ -56,7 +56,7 @@ input:hover, input:focus, textarea:hover, textarea:focus {
 }
 
 input:invalid:focus, input[type=url]:invalid, textarea:invalid {
-    border: thin solid var(--link-color-invalid, #ff002c);
+    border: thin solid var(--invalid-color, #ff002c);
 }
 
 button, input[type=submit] {

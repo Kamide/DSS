@@ -104,3 +104,14 @@ def users(request):
     }
 
     return render(request, 'accounts/users.html', context)
+
+@login_required
+def individuals(request, name):
+    try:
+        individual = User.objects.get(username=name)
+    except User.DoesNotExist:
+        individual = request.user
+        messages.error(request, f"Sorry, we couldn't find a user named {name}.")
+        messages.info(request, f'Now showing your profile page.')
+
+    return render(request, 'accounts/individual.html', {'individual': individual})

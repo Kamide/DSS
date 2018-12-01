@@ -10,4 +10,6 @@ urlpatterns = [
     path('settings/', views.settings, name='settings'),
     # /accounts/users
     path('users/', views.users, name='users'),
+    # /accounts/users/id
+    path('users/<name>', views.individuals, name='individuals'),
 ]

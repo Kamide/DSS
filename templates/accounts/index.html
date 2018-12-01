@@ -19,21 +19,23 @@
             <div>
                 {% include 'accounts/pfp.html' %}
                 <ul class="spacious bulletless">
-                    <li>Greetings, <a href="">{{ user }}</a>.</li>
+                    <li>Greetings, <a href="{% url 'individuals' user.username %}">{{ user }}</a>.</li>
                     {% load cohort_tags %}
                     <li>Group: {{ user|get_cohort_pluralized }}</li>
-                    {% if user.profile.interests != '' %}
-                        <li>Interests: {{ user.profile.interests }}</li>
-                    {% else %}
-                        <li>It appears you have yet to list any of your interests. To do that, click the link at the bottom.</li>
-                    {% endif %}
+                    <li>
+                        {% if user.profile.interests != '' %}
+                            Interests: {{ user.profile.interests }}
+                        {% else %}
+                            It appears you have yet to list any of your interests. To do that, click the link at the bottom.
+                        {% endif %}
+                    </li>
                 </ul>
                 <ul class="footer spacious bulletless">
                     <li><a href="{% url 'inbox' %}">Check Mailbox</a></li>
                     {% if user|is_su %}
                     <li><a href="{% url 'add_word' %}">Maintain Taboo Words List</a></li>
                     {% endif %}
-                    <li><a href="{% url 'settings' %}">Change Account Settings</a></li>
+                    <li><a href="{% url 'settings' %}">Change Account & Profile Settings</a></li>
                 </ul>
             </div>
         </div>
