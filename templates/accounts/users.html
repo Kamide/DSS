@@ -27,6 +27,11 @@
     }
     @media only screen and (min-width: 512px) {
         .pfp {
+            transform-origin: left;
+        }
+    }
+    @media only screen and (min-width: 832px) {
+        .pfp {
             transform-origin: center;
         }
     }
@@ -48,7 +53,7 @@
 {% block results %}
     {% for user in list_of_users %}
         <div class="slash-separated distributed body-text">
-            <span {% if user == request.user %}id="you"{% endif %}class="group filler gel-wrapper">
+            <span {% if user == request.user %}id="you"{% endif %} class="group filler gel-wrapper">
                 <a href="{% url 'individuals' user.username %}">
                     {% include 'accounts/pfp.html' %}
                     <span>

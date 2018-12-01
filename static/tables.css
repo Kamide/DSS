@@ -1,0 +1,15 @@
+table {
+    border-spacing: 0;
+}
+
+tr:hover {
+    background-color: var(--highlight-color-light, rgba(100, 240, 200, 0.1));
+}
+
+td:last-child {
+    width: 100%;
+}
+
+td:not(:last-child) {
+    border-right: thin solid var(--main-border-color, #dedede);
+}

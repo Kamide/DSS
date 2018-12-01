@@ -114,4 +114,4 @@ def individuals(request, name):
         messages.error(request, f"Sorry, we couldn't find a user named {name}.")
         messages.info(request, f'Now showing your profile page.')
 
-    return render(request, 'accounts/individual.html', {'individual': individual})
+    return render(request, 'accounts/individuals.html', {'individual': individual})

@@ -1,0 +1,17 @@
+<div class="gallery">
+    {% for doc in docs %}
+        <div class="card">
+            <div class="distributed" style="text-align: center;">
+                <div class="group"><a href="{% url 'individuals' doc.owner.username %}">{% include 'accounts/pfp.html' with user=doc.owner %}</a></div>
+                <h2 class="group filler"><a href="{% url 'individuals' doc.owner.username %}">{{ doc.owner }}</a></h2>
+            </div>
+            <ul class="bulletless footer">
+                <a href="{% url 'doc-detail' doc.id %}">
+                    <li><h1>{{ doc.title }}</h1></li>
+                    <li><h3>Privacy: {{ doc.privacy }}</h3></li>
+                    <li><h3>Number of Views: {{ doc.view_count }}</h3></li>
+                </a>
+            </ul>
+        </div>
+    {% endfor %}
+</div>

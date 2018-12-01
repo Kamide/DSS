@@ -3,53 +3,47 @@
 }
 
 .pfp {
-    width: 2in;
-    height: 2in;
+    width: 192px;
+    height: 192px;
+    z-index: 0;
     transform-origin: bottom right;
-    transition: transform 1s, transform-origin 1s;
+    transition: transform 0.5s, transform-origin 0.5s, z-index 1s step-end;
 }
 
 .pfp:hover {
     z-index: 1;
     transform: scale(2.5);
     transform-origin: top left;
+    transition: transform 1s, transform-origin 1s, z-index 0s step-start;
 }
 
 .pfp:hover ~ table {
     opacity: 0;
 }
 
-table {
-    border-spacing: 0;
-    transition: opacity 0.5s;
+.pfp:hover, .pfp:hover ~ table {
+    transition-delay: 1s;
 }
 
-tr:hover {
-    background-color: var(--highlight-color-light, rgba(100, 240, 200, 0.1));
+table {
+    transition: opacity 0.75s;
 }
 
 td {
     padding: 0 12px;
 }
 
-td:not(:last-child) {
-    border-right: thin solid var(--main-border-color, #dedede);
-}
-
-td:last-child {
-    width: 100%;
-}
-
 @keyframes target {
    25% {
        border-color: var(--main-border-color-emphasis, #9e9e9e);
        box-shadow: 0px 0px 8px var(--highlight-color-dark, rgba(100, 240, 200, 0.8)),
-                   0px 0px 16px var(--highlight-color-dark, rgba(100, 240, 200, 0.8));
+                   0px 0px 16px var(--highlight-color-dark, rgba(100, 240, 200, 0.8)),
+                   0px 0px 24px var(--highlight-color-dark, rgba(100, 240, 200, 0.8));
    }
 }
 
 .targeted {
     animation-name: target;
-    animation-duration: 1s;
+    animation-duration: 2s;
     animation-fill-mode: forwards;
 }

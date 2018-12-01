@@ -4,15 +4,7 @@
 {% block head %}
 {{ block.super }}
 {% load static %}
-<link type="text/css" rel="stylesheet" href="{% static 'grids.css' %}">
-<style>
-    .pfp {
-        position: relative;
-        margin-right: 4px;
-        width: 48px;
-        height: 48px;
-    }
-</style>
+<link type="text/css" rel="stylesheet" href="{% static 'docs.css' %}">
 {% endblock %}
 
 {% block filters %}
@@ -29,32 +21,19 @@
             {{ block.super }}
         {% endblock %}
 
-        <div class="card">
+        <div id="taboos" class="card">
             <h1>Taboo Words</h1>
             <p>Click <a href="{% url 'taboo_list' %}">here</a> to view the current list of taboo words.</p>
             <p>Remember: abusing taboo words will result in punishment!</p>
+            {% include 'toggler.html' with uid='taboos' %}
         </div>
 
         {% load cohort_tags %}
         {% if user|is_gu %}
-            <div class="card blend">
+            <div class="card blend tight">
                 <h1>Popular Documents</h1>
                     <hr />
-                <div class="gallery">
-                    {% for doc in docs %}
-                        <div class="card">
-                            {% include 'accounts/pfp.html' with user=doc.owner %}
-                            <div class="media-body">
-                                <div class="article-metadata">
-                                <a class="mr-2" href="#">{{ doc.owner }}</a>
-                                </div>
-                                <h2><a class="article-title" href="{% url 'doc-detail' doc.id %}">{{ doc.title }}</a></h2>
-                                <p class="article-content">Privacy: {{ doc.privacy }}</p>
-                                <p class="article-content">Number of Views: {{ doc.view_count }}</p>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
+                {% include 'documents/docs_gallery.html' %}
             </div>
         {% else %}
             <fieldset class="card">
@@ -64,21 +43,7 @@
             <div class="card blend tight">
                 <h1>Recent Documents</h1>
                     <hr />
-                <div class="gallery">
-                    {% for doc in docs %}
-                        <div class="card">
-                            {% include 'accounts/pfp.html' with user=doc.owner %}
-                            <div class="media-body">
-                                <div class="article-metadata">
-                                <a class="mr-2" href="#">{{ doc.owner }}</a>
-                                </div>
-                                <h2><a class="article-title" href="{% url 'doc-detail' doc.id %}">{{ doc.title }}</a></h2>
-                                <p class="article-content">Privacy: {{ doc.privacy }}</p>
-                                <p class="article-content">Number of Views: {{ doc.view_count }}</p>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
+                        {% include 'documents/docs_gallery.html' %}
                     <hr />
                 <div>
                     {% block limiter %}

@@ -1,0 +1,38 @@
+.local-nav {
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.local-nav a {
+    border-radius: inherit;
+    text-decoration: none;
+}
+
+.local-nav a * {
+    color: inherit;
+}
+
+.local-nav a:not(:last-child) {
+    border-right: thin solid transparent;
+    border-image: linear-gradient(var(--main-border-color, #dedede), transparent) 1;
+    border-top-right-radius: 0;
+}
+
+.local-nav a:not(:first-child) {
+    border-top-left-radius: 0;
+}
+
+.local-nav a:hover, .local-nav .opened {
+    background-image: linear-gradient(var(--highlight-color-light, rgba(100, 240, 200, 0.1)), transparent);
+}
+
+td:not(:first-child) {
+    padding-left: 8px;
+}
+
+td:not(:last-child) {
+    padding-right: 8px;
+}

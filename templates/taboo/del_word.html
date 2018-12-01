@@ -1,21 +1,5 @@
 {% extends 'taboo/maintain.html' %}
 
-{% block title %}Delete Word{% endblock %}
-{% block head %}
-{% load static %}
-<link type="text/css" rel="stylesheet" href="{% static 'forms.css' %}">
-{% endblock %}
+{% block title %}Delete Word - {{ block.super }}{% endblock %}
 
-{% block subcontent %}
-<div class="card">
-    <form class="wide body-text" method = "post">
-        {% csrf_token %}
-        <p>Enter a word or a list of words separated by a space</p>
-        <div class="form-block">{{ taboo_form }}</div>
-        <div class="form-block">
-            <input type="submit" value="Delete" />
-            <input type="hidden" name="next" value="" />
-        </div>
-    </form>
-</div>
-{% endblock %}
+{% block action %}Delete{% endblock %}
