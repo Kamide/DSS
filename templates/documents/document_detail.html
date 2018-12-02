@@ -33,7 +33,8 @@
         {% if object.owner == user or object.privacy == "PUBLIC" or object.privacy == "RESTRICTED" and user|has_gu_rights or object.privacy == "SHARED" and object.owner == user or canedit %}
             {% block limiter %}
                 <h1>{% block cardtitle %}{% endblock %}</h1>
-                    <form class="body-text" method="get">
+                    <form class="body-text" method="post">
+                        {% csrf_token %}
                         <div class="form-block wide distributed">
                             <label id="ipp" for="count">Version Number:</label>
                             <input id="count" class="filler" type="number" name="Version" min="0" max="{{ object.version }}" step="1" value="{{ object.version }}" />

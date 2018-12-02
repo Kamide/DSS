@@ -6,55 +6,104 @@
 <link type="text/css" rel="stylesheet" href="{% static 'flexboxes.css' %}">
 <link type="text/css" rel="stylesheet" href="{% static 'individuals.css' %}">
 <link type="text/css" rel="stylesheet" href="{% static 'tables.css' %}">
+<link type="text/css" rel="stylesheet" href="{% static 'widgets.css' %}">
+<link type="text/css" rel="stylesheet" href="{% static 'forms.css' %}">
+<link type="text/css" rel="stylesheet" href="{% static 'docs.css' %}">
 <script type="text/javascript" src="{% static 'effects.js' %}"></script>
 {% endblock %}
 {% block onload %}highlightPageJumps();{% endblock %}
 
 {% block content %}
-<div id="biography" class="card">
-    <div class="distributed">
-        <table id="info" class="group filler">
-            <thead>
-                {% include 'accounts/pfp.html' with user=individual %}
-            </thead>
+{% if user.is_authenticated %}
+    {% block info %}
+        <div id="biography" class="card">
+            <div class="distributed">
+                <span id="you">{% include 'accounts/pfp.html' with user=individual %}</span>
+                <table id="info" class="group filler">
+                    <tbody>
+                        <tr>
+                            <td><h2>Username</h2></td>
+                            <td><h1>{{ individual.username }}</h1></td>
+                        </tr>
+                        <tr>
+                            <td><h3>Group</h3></td>
+                            {% load cohort_tags %}
+                            <td><h2>{{ individual|get_cohort_pluralized }}</h2></td>
+                        </tr>
+                        <tr>
+                            <td><h4>Interests</h4></td>
+                            <td><h3>
+                                {% if individual.profile.interests != '' %}
+                                    {{ individual.profile.interests }}
+                                {% else %}
+                                    <em>This user has yet to list their interests.</em>
+                                {% endif %}
+                            </h3></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endblock %}
+
+    {% block actions %}
+        <fieldset id="actions" class="card">
+            <legend><h1>Actions</h1></legend>
+            <a class="gel-anchor body-text" href="{% url 'compose' %}">Message</a>
+        </fieldset>
+
+        {% if user|has_su_rights and individual != user %}
+            <div id="manage" class="card">
+                <h1>Manage</h1>
+                <form class="auto-width body-text" method="post">
+                    {% csrf_token %}
+                    <label>Group:</label>
+                    <div class="bulletless-all">
+                        {% for radio in um_form %}
+                            {{ radio }}
+                        {% endfor %}
+                    </div>
+                    <input type="submit" value="Change" />
+                </form>
+            </div>
+        {% endif %}
+    {% endblock %}
+
+    <div id="stats" class="card">
+        <h1>Stats</h1>
+        <table>
             <tbody>
                 <tr>
-                    <td><h2>Username</h2></td>
-                    <td><h1>{{ individual.username }}</h1></td>
+                    <td><h3>Number of Documents</h3></td>
+                    <td><h2>{{ doc_count }}</h2></td>
                 </tr>
                 <tr>
-                    <td><h3>Group</h3></td>
-                    {% load cohort_tags %}
-                    <td><h2>{{ individual|get_cohort_pluralized }}</h2></td>
-                </tr>
-                <tr>
-                    <td><h4>Interests</h4></td>
-                    <td><h3>
-                        {% if individual.profile.interests != '' %}
-                            {{ individual.profile.interests }}
-                        {% else %}
-                            <em>This user has yet to list their interests.</em>
-                        {% endif %}
-                    </h3></td>
+                    <td><h3>Document View Count</h3></td>
+                    <td><h2>{{ doc_views.view_count__sum|default_if_none:0 }}</h2></td>
                 </tr>
             </tbody>
         </table>
     </div>
-</div>
 
-<fieldset id="actions" class="card">
-    <legend><h1>Actions</h1></legend>
-</fieldset>
-
-<div class="card blend">
-    <h1>3 Most Recent Documents</h1>
-    <hr />
-    <p>User has documents</p>
-</div>
-
-<div class="card blend">
-    <h1>3 Most Popular Documents</h1>
-    <hr />
-    <p>User doesn't have any documents</p>
-</div>
+    {% if has_docs %}
+        <div class="card blend tight">
+            <h1>3 Most Recent Documents</h1>
+            <hr />
+            {% include 'documents/docs_gallery.html' with docs=documents %}
+        </div>
+    {% else %}
+        <div class="card blend">
+            <h1>3 Most Popular Documents (in DSS)</h1>
+            <hr />
+            <p>
+                {% block no_docs_msg %}
+                    {{ individual.username|capfirst }} doesn't have any documents. Try looking at these other documents instead.
+                {% endblock %}
+            </p>
+            {% include 'documents/docs_gallery.html' with docs=documents %}
+        </div>
+    {% endif %}
+{% else %}
+    {% include 'registration/please_log_in.html' %}
+{% endif %}
 {% endblock %}

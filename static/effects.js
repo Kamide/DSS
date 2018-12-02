@@ -73,7 +73,10 @@ function highlightPageJumps() {
     if (window.location.hash.length) {
         place = document.getElementById(window.location.hash.slice(1));
         if (place !== null) {
-            place.classList.add("targeted");
+            if (performance.navigation.type != 1) {
+                place.classList.add("targeted");
+                window.scrollBy(0, -48);
+            }
         }
     }
 }

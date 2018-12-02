@@ -3,9 +3,11 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
-from django.db.models import Q
+from django.db.models import Q, Sum
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
-from .forms import UpdateProfileForm
+from .forms import UpdateProfileForm, UpdateMembershipForm
+from .models import Profile
+from documents.models import Document
 
 
 def index(request):
@@ -13,7 +15,10 @@ def index(request):
     # messages.success(request, f'1')
     # messages.error(request, f'2')
     # messages.info(request, f'3')
-    return render(request, 'accounts/index.html')
+    if not request.user.is_anonymous:
+        return individuals(request, request.user.username, 'accounts/index.html')
+    else:
+        return render(request, 'accounts/index.html')
 
 
 def signup(request):
@@ -46,11 +51,10 @@ def settings(request):
     return render(request, 'accounts/settings.html', {'profile_form': profile_form})
 
 
-@login_required
 def users(request):
     search = request.GET.get('search')
 
-    if search is None or search == '':
+    if search is None or search == '' or request.user.is_anonymous or request.user.profile.is_gu():
         search = ''
         list_of_users = User.objects.all()
     else:
@@ -100,13 +104,13 @@ def users(request):
         'list_of_users': list_of_users,
         'search': search,
         'count': count,
-        'sequence': sequence
+        'sequence': sequence,
     }
 
     return render(request, 'accounts/users.html', context)
 
-@login_required
-def individuals(request, name):
+
+def individuals(request, name, template='accounts/individuals.html'):
     try:
         individual = User.objects.get(username=name)
     except User.DoesNotExist:
@@ -114,4 +118,40 @@ def individuals(request, name):
         messages.error(request, f"Sorry, we couldn't find a user named {name}.")
         messages.info(request, f'Now showing your profile page.')
 
-    return render(request, 'accounts/individuals.html', {'individual': individual})
+    if request.method == 'POST' and request.user.profile.has_su_rights():
+        um_form = UpdateMembershipForm(request.POST)
+        if um_form.is_valid():
+            cohort = request.POST.get('cohort')
+            try:
+                cohort = int(cohort)
+                old_cohort = individual.profile.get_cohort()
+                individual.profile.set_cohort(cohort)
+                individual.profile.save()
+                messages.success(request, f'{name} has been successfully changed from a {old_cohort} to a {Profile.COHORTS[cohort][1]}.')
+            except ValueError:
+                messages.error(request, f'Invalid group selected.')
+
+            return redirect('individuals', name)
+    else:
+        um_form = UpdateMembershipForm(initial={'cohort': individual.profile.cohort})
+
+    documents = Document.objects.filter(owner=individual).order_by('view_count').reverse()
+    doc_count = documents.count()
+    doc_views = documents.aggregate(Sum('view_count'))
+    documents = documents[:3]
+    if doc_count < 1:
+        documents = Document.objects.order_by('view_count').reverse()[:3]
+        has_docs = False
+    else:
+        has_docs = True
+
+    context = {
+        'individual': individual,
+        'documents': documents,
+        'has_docs': has_docs,
+        'doc_count': doc_count,
+        'doc_views': doc_views,
+        'um_form': um_form,
+    }
+
+    return render(request, template, context)

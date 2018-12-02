@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from .forms import TabooForm
 from .models import Taboo
 
 
+@login_required
 def add_word(request):
     if request.method == "POST":
         taboo_form = TabooForm(request.POST)
@@ -43,6 +45,7 @@ def add_word(request):
     return render(request, "taboo/add_word.html", context)
 
 
+@login_required
 def del_word(request):
     if request.method == "POST":
         taboo_form = TabooForm(request.POST)

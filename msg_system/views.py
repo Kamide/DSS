@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 
 
+@login_required
 def compose(request):
     prefilled_msg = request.GET.get('showthis')
     doc_id = request.GET.get('inviteto')
@@ -47,10 +48,12 @@ def compose(request):
     return render(request, "msg_system/compose.html", context)
 
 
+@login_required
 def mailbox(request):
     return render(request, "msg_system/mailbox.html")
 
 
+@login_required
 def inbox(request):
     current_user = request.user.id
     inbox_qs = Message.objects.all().filter(receiver=current_user)
@@ -58,6 +61,7 @@ def inbox(request):
     return render(request, "msg_system/inbox.html", context)
 
 
+@login_required
 def sent(request):
     current_user = request.user.id
     sent_qs = Message.objects.all().filter(sender=current_user)
