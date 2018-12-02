@@ -4,6 +4,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.contrib import messages
 from django.core.files.base import ContentFile
 from .models import Document
+import filecmp
 
 
 def index(request):
@@ -50,6 +51,67 @@ class DocDetailView(DetailView):
                 doc.save()
             else:
                 messages.error(request, f'You did not lock this document initially')
+        elif request.POST.get("Update"):
+            if self.request.user.username == doc.locked_by and not filecmp.cmp(doc.txt.name, doc.cur_ver.name):
+                add = 0
+                remove = 0
+                update = 0
+                with doc.txt.open() as f:
+                    text = list(filter(None, (line.rstrip() for line in f)))
+                    size = len(text)
+                with doc.cur_ver.open() as f:
+                    text_prev = list(filter(None, (line.rstrip() for line in f)))
+                    size_prev = len(text_prev)
+                if size - size_prev > 0:
+                    remove = size - size_prev
+                else:
+                    add = size_prev - size
+                for word in text_prev:
+                    if word not in text:
+                        update += 1
+                cmds = []
+                index = 0
+                messages.success(request, remove)
+                while add > 0 or remove > 0:
+                    if remove > 0:
+                        for word in text:
+                            if index >= size_prev or word != text_prev[index]:
+                                cmds.append("remove "+str(index))
+                                remove -= 1
+                                if remove == 0:
+                                    break
+                            else:
+                                messages.success(request, f'Works')
+                                index += 1
+                    elif add > 0:
+                        for word in text:
+                            if word != text_prev[index]:
+                                cmds.append("add "+str(index))
+                                add -= 1
+                                if add == 0:
+                                    break
+                            else:
+                                index += 1
+                index = 0
+                while update > 0:
+                    for word in text:
+                        if word != text_prev[index]:
+                            cmds.append("update " + str(index) + ' '+str(text_prev[index].decode("utf-8")))
+                            update -= 1
+                            if update == 0:
+                                break
+                cmds.reverse()
+                with doc.cmd_txt.open('a') as f:
+                    f.write(str(doc.version)+'\n')
+                    for command in cmds:
+                        f.write(command+'\n')
+                doc.version += 1
+                doc.cur_ver.delete()
+                cur_txt = ContentFile(doc.content)
+                doc.cur_ver.save(doc.title + '_prev.txt', cur_txt)
+                doc.save()
+        elif request.POST.get("Version"):
+            messages.success(request, f'Works')
         return redirect(doc.get_absolute_url())
 
 
@@ -62,6 +124,8 @@ class DocCreateView(LoginRequiredMixin, CreateView):
         self.object = form.save()
         doc_txt = ContentFile(self.object.content)
         self.object.txt.save(self.object.title+'.txt', doc_txt)
+        self.object.cur_ver.save(self.object.title + '_prev.txt', doc_txt)
+        self.object.cmd_txt.save(self.object.title + '_cmd.txt', ContentFile(''))
         return super().form_valid(form)
 
 
@@ -93,6 +157,8 @@ class DocDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         doc = self.get_object()
         if self.request.user == doc.owner:
             doc.txt.delete()
+            doc.cmd_txt.delete()
+            doc.cur_ver.delete()
             return True
         return False
 
