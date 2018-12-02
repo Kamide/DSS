@@ -7,8 +7,9 @@
 <link type="text/css" rel="stylesheet" href="{% static 'paginator.css' %}">
 <link type="text/css" rel="stylesheet" href="{% static 'widgets.css' %}">
 <style>
-    #ipp {
-        margin-right: 8px;
+    #limiter {
+        margin: 8px;
+        margin-left: 0;
     }
 </style>
 <script type="text/javascript" src="{% static 'effects.js' %}"></script>
@@ -21,16 +22,16 @@
     {% block search %}
         <div id="search" class="card">
             <h1>Search</h1>
-            <form class="body-text" method="get">
-                <div class="form-block wide distributed">
+            <form class="form-block wide body-text" method="get">
+                <div class="distributed">
+                    <input type="hidden" name="count" value="{{ count }}" />
                     <input class="filler" type="text" name="search" value="{{ search }}" />
                     <input type="submit" value="Search" />
-                    <input type="hidden" name="count" value="{{ count }}" />
                 </div>
             </form>
             <div class="body-text">{% block filters %}{% endblock %}</div>
             <p class="footer">{% block helptext %}{% endblock %}</p>
-            <button class="toggler body-text" onclick="expandCollapseParentOf(this);">-</button>
+            {% include 'toggler.html' with uid='search' %}
         </div>
     {% endblock %}
 
@@ -39,10 +40,10 @@
     <div class="card">
         {% block limiter %}
             <h1>{% block cardtitle %}{% endblock %}</h1>
-            <form class="body-text" method="get">
-                <div class="form-block wide distributed">
-                    <label id="ipp" for="count">Items per page:</label>
+            <form class="form-block wide body-text" method="get">
+                <div class="distributed">
                     <input type="hidden" name="search" value="{{ search }}" />
+                    <label id="limiter" for="count">Items per page:</label>
                     <input id="count" class="filler" type="number" name="count" min="1" step="1" value="{{ count }}" />
                     <input type="submit" value="Change" />
                 </div>

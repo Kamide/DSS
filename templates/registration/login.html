@@ -20,16 +20,11 @@
         <form class="body-text" method="post" action="{% url 'login' %}">
             {% csrf_token %}
             <div class="form-block">
-                {{ form.username.label_tag }}
-                {{ form.username }}
+                {{ form.as_p }}
             </div>
             <div class="form-block">
-                {{ form.password.label_tag }}
-                {{ form.password }}
-            </div>
-            <div class="form-block">
-                <input type="submit" value="Log In" />
                 <input type="hidden" name="next" value="{{ next }}" />
+                <input type="submit" value="Log In" />
             </div>
         </form>
 

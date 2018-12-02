@@ -1,21 +1,13 @@
 {% extends 'msg_system/mailbox.html' %}
 
-{% block title %}Inbox{% endblock %}
+{% block title %}Inbox - {{ block.super }}{% endblock %}
+
+{% block empty_mailbox_msg %}
+    <em>You have no new messages.</em>
+{% endblock %}
 
 {% block box %}
-    {% if inbox_qs.count < 1 %}
-        <p>No new messages</p>
-    {% else %}
-        {% for msg in inbox_qs reversed %}
-            <div class="body-text">
-                <ul class="bulletless">
-                    <li>From: <a>{{ msg.sender }}</a></li>
-                    <li>Reason: <em>{{ msg.reason|title }}</em></li>
-                    {% load message_tags %}
-                    <li>{{ msg.msg_content|linebreaks|local_urlize|urlize }}</li>
-                </ul>
-            </div>
-            <hr />
-        {% endfor %}
-    {% endif %}
+    {% with inbox_qs as mailbox_qs %}
+        {{ block.super }}
+    {% endwith %}
 {% endblock %}

@@ -11,10 +11,10 @@
     <h1>Compose Message</h1>
     <form class="wide body-text" method = "post">
         {% csrf_token %}
-        <div class="form-block">{{ message_form }}</div>
+        <div class="form-block">{{ message_form.as_p }}</div>
         <div class="form-block">
-            <input type="submit" value="Send" />
             <input type="hidden" name="next" value="" />
+            <input type="submit" value="Send" />
         </div>
     </form>
 </div>

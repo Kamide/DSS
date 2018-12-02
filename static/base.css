@@ -53,9 +53,12 @@ p, .spacious {
     padding: 0;
 }
 
+/* Navigation */
+
 #header {
+    position: relative;
     font-size: 1.75rem;
-    z-index: 1;
+    z-index: 2;
 }
 
 #header * {
@@ -79,15 +82,17 @@ p, .spacious {
     flex: 1;
 }
 
-#nav a {
+#nav a, .local-nav a {
     display: inline-block;
-    position: relative;
     width: 100%;
     height: 100%;
+    text-decoration: none;
+}
+
+#nav a {
+    position: relative;
     padding: 8px 0;
     color: var(--inactive-color, #939393);
-    text-align: left;
-    text-decoration: none;
 }
 
 #nav a::after {
@@ -124,8 +129,8 @@ p, .spacious {
     position: fixed;
     top: 0;
     width: 100%;
-    z-index: 1;
     text-align: center;
+    z-index: 1;
 }
 
 .alert {
@@ -152,6 +157,8 @@ p, .spacious {
     background-image: linear-gradient(rgba(155, 165, 175, 0.75), rgba(215, 185, 215, 0.25));
     box-shadow: 0px 4px 8px rgba(215, 185, 215, 0.25);
 }
+
+/* Containers */
 
 #content {
     width: 100%;
@@ -180,10 +187,6 @@ p, .spacious {
     color: var(--link-color-emphasis, #5da486);
 }
 
-.card ul {
-    list-style: circle;
-}
-
 hr {
     border: none;
     border-bottom: thin solid var(--main-border-color, #dedede);
@@ -200,7 +203,7 @@ hr {
 .pfp {
     border: thin solid var(--main-border-color, #dedede);
     border-radius: 4px;
-    background-image: radial-gradient(white, transparent);
+    background-image: radial-gradient(var(--main-bg-color, #fefefe) 50%, rgba(255, 255, 255, 0) 250%);
     box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
 }
 
@@ -243,11 +246,13 @@ hr {
     }
 }
 
-@media only screen and (min-width: 800px) {
+@media only screen and (min-width: 832px) {
     #content {
-        width: 8.5in;
+        width: 832px;
     }
 }
+
+/* Containers overriding .card */
 
 .blend > *:first-child, legend > *:first-child {
     margin-top: 0;
@@ -271,7 +276,6 @@ hr {
 
 .blend .card {
     margin: 0;
-    padding: 8px;
 }
 
 legend {

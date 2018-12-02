@@ -14,12 +14,12 @@
 
 <div class="card">
     <h1>Profile Settings</h1>
-    <form class="body-text" method="post">
+    <form class="body-text wide" method="post">
         {% csrf_token %}
-        <div class="form-block wide">{{ profile_form }}</div>
-        <div class="form-block wide">
-            <input type="submit" value="Update" />
+        <div class="form-block">{{ profile_form.as_p }}</div>
+        <div class="form-block">
             <input type="hidden" name="next" value="" />
+            <input type="submit" value="Update" />
         </div>
     </form>
     <p class="footer">

@@ -3,23 +3,58 @@
 {% block title %}Mailbox{% endblock %}
 {% block head %}
 {% load static %}
+<link type="text/css" rel="stylesheet" href="{% static 'flexboxes.css' %}">
 <link type="text/css" rel="stylesheet" href="{% static 'widgets.css' %}">
+<link type="text/css" rel="stylesheet" href="{% static 'local_nav.css' %}">
+<link type="text/css" rel="stylesheet" href="{% static 'tables.css' %}">
+<style>
+    .distributed > * {
+        margin-top: 0;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
-<fieldset class="card">
-    <legend><h1>Mailbox</h1></legend>
-    <a class="gel-anchor body-text" href="{% url 'compose' %}">Compose New Message</a>
-</fieldset>
-
-<div id="header" style="z-index: 0;">
-        <ul id="nav" class="bulletless">
-            <li><a class="{% if request.resolver_match.url_name == 'inbox'%}opened{% endif %}" href="{% url 'inbox' %}">Inbox</a></li>
-            <li><a class="{% if request.resolver_match.url_name == 'sent' %}opened{% endif %}" href="{% url 'sent' %}">Sent</a></li>
-        </ul>
-        <div class="card" style="margin-top: 0;">
-            {% block box %}{% endblock %}
-        </div>
+<div class="card blend">
+    <div class="distributed">
+        <h1>Mailbox</h1>
+        <span class="group"><a class="gel-anchor body-text" href="{% url 'compose' %}">Compose New Message</a></span>
+    </div>
+    <div class="distributed footer local-nav">
+        <a class="{% if request.resolver_match.url_name == 'inbox'%}opened{% endif %}" href="{% url 'inbox' %}"><h2>Inbox</h2></a>
+        <a class="{% if request.resolver_match.url_name == 'sent' %}opened{% endif %}" href="{% url 'sent' %}"><h2>Sent</h2></a>
+    </div>
+    <div class="card">
+        {% block box %}
+            {% if mailbox_qs.count < 1 %}
+                <p>{% block empty_mailbox_msg %}{% endblock %}</p>
+            {% else %}
+                {% for msg in mailbox_qs reversed %}
+                    <table class="body-text">
+                        <thead>
+                            <tr>
+                                <td>From</td>
+                                <td><a href="{% url 'individuals' msg.sender.username %}">{{ msg.sender }}</a></td>
+                            </tr>
+                            <tr>
+                                <td>Reason</td>
+                                <td>{{ msg.reason|title }}</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                {% load message_tags %}
+                                <td colspan="2">{{ msg.msg_content|linebreaks|local_urlize|urlize }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    {% if not forloop.last %}
+                        <hr />
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endblock %}
+    </div>
 </div>
 
 {% comment %}
@@ -27,8 +62,8 @@
     <form class="body-text" method = "post">
         {% csrf_token %}
         <div class="form-block">{{ message_form }}</div>
-        <input type="submit" value="Send" />
         <input type="hidden" name="next" value="" />
+        <input type="submit" value="Send" />
     </form>
 </div>
 {% endcomment %}

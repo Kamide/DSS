@@ -1,21 +1,29 @@
+.pfp {
+    width: 48px;
+    height: 48px;
+}
+
 .gallery {
     display: grid;
     grid-template-columns: repeat(1, 1fr);
 }
 
 .gallery > * {
+    padding: 8px;
     transition: box-shadow 0.1s, filter 0.1s;
 }
 
 .gallery > *:hover {
     box-shadow: 0px 0px 4px var(--link-color-emphasis, #5da486);
-    filter: brightness(105%);
     transition: none;
 }
 
-.gallery a {
-    display: inline-block;
-    width: 100%;
+.gallery a *:not(h1) {
+    color: inherit;
+}
+
+.gallery .footer {
+    padding: 0 4px 0 4px;
 }
 
 @media only screen and (min-width: 512px) {
@@ -26,7 +34,7 @@
     }
 }
 
-@media only screen and (min-width: 800px) {
+@media only screen and (min-width: 832px) {
     .gallery {
         grid-template-columns: repeat(3, 1fr);
     }

@@ -5,6 +5,7 @@
 {% load static %}
 <link type="text/css" rel="stylesheet" href="{% static 'flexboxes.css' %}">
 <link type="text/css" rel="stylesheet" href="{% static 'individuals.css' %}">
+<link type="text/css" rel="stylesheet" href="{% static 'tables.css' %}">
 <script type="text/javascript" src="{% static 'effects.js' %}"></script>
 {% endblock %}
 {% block onload %}highlightPageJumps();{% endblock %}
@@ -32,7 +33,7 @@
                         {% if individual.profile.interests != '' %}
                             {{ individual.profile.interests }}
                         {% else %}
-                            <em>This user has yet to list their interests...</em>
+                            <em>This user has yet to list their interests.</em>
                         {% endif %}
                     </h3></td>
                 </tr>

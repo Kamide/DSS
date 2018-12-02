@@ -34,31 +34,34 @@ function expandCollapseParentOf(child) {
         discardCollapsedItem(parent.getAttribute("id"));
     }
 
-    switch(child.innerHTML) {
-        case "-":
-            child.innerHTML = "+";
-            break;
-        case "+":
-            child.innerHTML = "-";
-            break;
-    }
+    if (child.innerHTML == "+")
+        child.innerHTML = "-"
+    else
+        child.innerHTML = "+"
 }
 
 function collapseItems() {
     items = localStorage.getItem("collapsed");
 
     if (items != null) {
-        cleaned_items = "";
         items = items.split(";");
+        items_checked = {};
+        cleaned_items = "";
 
-        for (var i = items.length - 1; i >= 0; --i) {
-            if (items[i] != "") {
-                element = document.getElementById(items[0]);
+        for (var i = 0; i < items.length; ++i) {
+            if (items[i] != "" && !items_checked[items[i]]) {
+                element = document.getElementById(items[i]);
+
                 if (element !== null) {
                     collapse(element);
-                    element.getElementsByClassName("toggler")[0].innerHTML = "+";
-                    cleaned_items += items[i] + ";";
+
+                    toggler = document.getElementById(element.getAttribute("id") + "-toggler");
+                    if (toggler != null)
+                        toggler.innerHTML = "+";
                 }
+
+                items_checked[items[i]] = true;
+                cleaned_items += items[i] + ";";
             }
         }
 

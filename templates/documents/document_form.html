@@ -18,8 +18,8 @@
             {% csrf_token %}
             <div class="form-block">{{ form }}</div>
             <div class="form-block">
-                <input type="submit" value="Post" />
                 <input type="hidden" name="next" value="{{ next }}" />
+                <input type="submit" value="Post" />
             </div>
     </form>
 </div>
