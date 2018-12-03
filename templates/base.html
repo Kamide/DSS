@@ -27,7 +27,9 @@
         <div id="alerts">
             {% if messages %}
                 {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                    <div class="alert alert-{{ message.tags }}">
+                        <span>{{ message }}</span>
+                    </div>
                 {% endfor %}
             {% endif %}
             {% block msgs %}{% endblock %}

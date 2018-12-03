@@ -32,10 +32,7 @@
                 {% for msg in mailbox_qs reversed %}
                     <table class="body-text">
                         <thead>
-                            <tr>
-                                <td>From</td>
-                                <td><a href="{% url 'individuals' msg.sender.username %}">{{ msg.sender }}</a></td>
-                            </tr>
+                            {% block msg_head %}{% endblock %}
                             <tr>
                                 <td>Reason</td>
                                 <td>{{ msg.reason|title }}</td>

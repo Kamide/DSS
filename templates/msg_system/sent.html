@@ -6,6 +6,13 @@
     <em>You haven't sent any messages yet.</em>
 {% endblock %}
 
+{% block msg_head %}
+    <tr>
+        <td>To</td>
+        <td><a href="{% url 'individuals' msg.receiver.username %}">{{ msg.receiver }}</a></td>
+    </tr>
+{% endblock %}
+
 {% block box %}
     {% with sent_qs as mailbox_qs %}
         {{ block.super }}
