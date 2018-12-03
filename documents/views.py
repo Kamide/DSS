@@ -4,6 +4,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.contrib import messages
 from django.core.files.base import ContentFile
 from .models import Document
+from .forms import RemoveUserForm
 import filecmp
 
 
@@ -21,12 +22,13 @@ class DocListView(ListView):
 
 class DocDetailView(DetailView):
     model = Document
+    form_class = RemoveUserForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         doc = self.get_object()
         doc.view_count += 1
-        doc.save(update_fields=['view_count'])
+        doc.save()
         can_edit = doc.users_that_write.filter(id=self.request.user.id)
         if can_edit.exists():
             context['canedit'] = True
@@ -64,11 +66,14 @@ class DocDetailView(DetailView):
                     size_prev = len(text_prev)
                 if size - size_prev > 0:
                     remove = size - size_prev
+                    for word in text_prev:
+                        if word not in text:
+                            update += 1
                 else:
                     add = size_prev - size
-                for word in text_prev:
-                    if word not in text:
-                        update += 1
+                    for word in text:
+                        if word not in text_prev:
+                            update += 1
                 cmds = []
                 index = 0
                 messages.success(request, remove)
@@ -84,10 +89,12 @@ class DocDetailView(DetailView):
                                 messages.success(request, f'Works')
                                 index += 1
                     elif add > 0:
-                        for word in text:
-                            if word != text_prev[index]:
-                                cmds.append("add "+str(index))
+                        added = 0
+                        for word in text_prev:
+                            if index >= size or word != text[index]:
+                                cmds.append("add "+str(index+added)+' '+str(word.decode("utf-8")))
                                 add -= 1
+                                added += 1
                                 if add == 0:
                                     break
                             else:
@@ -111,8 +118,39 @@ class DocDetailView(DetailView):
                 doc.cur_ver.save(doc.title + '_prev.txt', cur_txt)
                 doc.save()
         elif request.POST.get("Version"):
-            messages.success(request, f'Works')
+            doc = self.get_object()
+            version = doc.version
+            print(doc.version)
+            print(request.POST['Version'])
+            with doc.cur_ver.open() as f:
+                current = list(filter(None, (line.rstrip() for line in f)))
+            for i in range(len(current)):
+                current[i] = current[i].decode("utf-8")
+            with doc.cmd_txt.open() as f:
+                commands = list(filter(None, (line.rstrip() for line in f)))
+            commands.reverse()
+            while version > int(request.POST['Version']):
+                for cmd in commands:
+                    if version <= int(request.POST['Version']):
+                        break
+                    action = cmd.decode("utf-8").split()
+                    print(action)
+                    if action[0] == 'remove':
+                        current.pop(int(action[1]))
+                    elif action[0] == 'add':
+                        current.insert(int(action[1]), action[2])
+                    elif action[0] == 'update':
+                        current[int(action[1])] = action[2]
+                    else:
+                        version -= 1
+            doc.old_ver = '\n'.join(current)
+            doc.save()
+            return redirect('version/?&version='+str(request.POST['Version']))
         return redirect(doc.get_absolute_url())
+
+
+class DocVersionView(DetailView):
+    model = Document
 
 
 class DocCreateView(LoginRequiredMixin, CreateView):
@@ -135,7 +173,6 @@ class DocUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     fields = ['title', 'content']
 
     def form_valid(self, form):
-        form.instance.owner = self.request.user
         self.object = form.save()
         self.object.txt.delete()
         doc_txt = ContentFile(self.object.content)

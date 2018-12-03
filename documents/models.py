@@ -9,6 +9,7 @@ class Document(models.Model):
     title = models.CharField(max_length=30, unique=True)
     privacy = models.TextField(max_length=10, choices=PRIVACY_LEVELS)
     content = models.TextField()
+    old_ver = models.TextField(default='')
     txt = models.FileField(null=True, upload_to='documents/')
     cur_ver = models.FileField(null=True, upload_to='documents/')
     cmd_txt = models.FileField(null=True, upload_to='documents/')
