@@ -65,7 +65,7 @@
             </span>
             {% if request.user|has_su_rights and user != request.user %}
                 <span class="group gel-wrapper">
-                    <a href="{% url 'individuals' user.username %}#actions">Manage</a>
+                    <a href="{% url 'individuals' user.username %}#manage">Manage</a>
                 </span>
             {% endif %}
             {% if request.user|has_ou_rights and user != request.user %}
@@ -73,9 +73,11 @@
                     <a href="">Report</a>
                 </span>
             {% endif %}
-            <span class="group gel-wrapper">
-                <a href="{% url 'compose' %}">Message</a>
-            </span>
+            {% if request.user.is_authenticated %}
+                <span class="group gel-wrapper">
+                    <a href="{% url 'compose' %}">Message</a>
+                </span>
+            {% endif %}
         </div>
         {% if not forloop.last %}
             <hr />

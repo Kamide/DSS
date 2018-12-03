@@ -20,19 +20,22 @@
     {% block before_search %}{% endblock %}
 
     {% block search %}
-        <div id="search" class="card">
-            <h1>Search</h1>
-            <form class="form-block wide body-text" method="get">
-                <div class="distributed">
-                    <input type="hidden" name="count" value="{{ count }}" />
-                    <input class="filler" type="text" name="search" value="{{ search }}" />
-                    <input type="submit" value="Search" />
-                </div>
-            </form>
-            <div class="body-text">{% block filters %}{% endblock %}</div>
-            <p class="footer">{% block helptext %}{% endblock %}</p>
-            {% include 'toggler.html' with uid='search' %}
-        </div>
+        {% load cohort_tags %}
+        {% if user|has_ou_rights %}
+            <div id="search" class="card">
+                <h1>Search</h1>
+                <form class="form-block wide body-text" method="get">
+                    <div class="distributed">
+                        <input class="filler" type="text" name="search" value="{{ search }}" />
+                        <input type="hidden" name="count" value="{{ count }}" />
+                        <input type="submit" value="Search" />
+                    </div>
+                </form>
+                <div class="body-text">{% block filters %}{% endblock %}</div>
+                <p class="footer">{% block helptext %}{% endblock %}</p>
+                {% include 'toggler.html' with uid='search' %}
+            </div>
+        {% endif %}
     {% endblock %}
 
     {% block after_search %}{% endblock %}

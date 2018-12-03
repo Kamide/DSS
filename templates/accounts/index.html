@@ -1,9 +1,10 @@
-{% extends 'base.html' %}
+{% extends 'accounts/individuals.html' %}
 
 {% block title %}Home{% endblock %}
 {% block head %}
+{{ block.super }}
 <style>
-    .pfp {
+    #mini .pfp {
         float: left;
         margin-right: 16px;
         width: 96px;
@@ -12,42 +13,37 @@
 </style>
 {% endblock %}
 
-{% block content %}
-    {% if user.is_authenticated %}
-        <div class="card">
-            <h1>My Account Information</h1>
-            <div>
-                {% include 'accounts/pfp.html' %}
-                <ul class="spacious bulletless">
-                    <li>Greetings, <a href="{% url 'individuals' user.username %}">{{ user }}</a>.</li>
-                    {% load cohort_tags %}
-                    <li>Group: {{ user|get_cohort_pluralized }}</li>
-                    <li>
-                        {% if user.profile.interests != '' %}
-                            Interests: {{ user.profile.interests }}
-                        {% else %}
-                            It appears you have yet to list any of your interests. To do that, click the link at the bottom.
-                        {% endif %}
-                    </li>
-                </ul>
-                <ul class="footer spacious bulletless">
-                    <li><a href="{% url 'inbox' %}">Check Mailbox</a></li>
-                    {% if user|is_su %}
-                    <li><a href="{% url 'add_word' %}">Maintain Taboo Words List</a></li>
+{% block info %}
+    <div class="card">
+        <h1>My Account Information</h1>
+        <div>
+            <span id="mini">{% include 'accounts/pfp.html' %}</span>
+            <ul class="spacious bulletless">
+                <li>Greetings, <a href="{% url 'individuals' user.username %}">{{ user }}</a>.</li>
+                {% load cohort_tags %}
+                <li>Group: {{ user|get_cohort_pluralized }}</li>
+                <li>
+                    {% if user.profile.interests != '' %}
+                        Interests: {{ user.profile.interests }}
+                    {% else %}
+                        It appears you have yet to list any of your interests. To do that, click the link at the bottom.
                     {% endif %}
-                    <li><a href="{% url 'settings' %}">Change Account & Profile Settings</a></li>
-                </ul>
-            </div>
+                </li>
+            </ul>
+            <ul class="footer spacious bulletless">
+                <li><a href="{% url 'inbox' %}">Check Inbox</a></li>
+                <li><a href="{% url 'sent' %}">Check Outbox</a></li>
+                {% if user|is_su %}
+                <li><a href="{% url 'add_word' %}">Maintain Taboo Words List</a></li>
+                {% endif %}
+                <li><a href="{% url 'settings' %}">Change Account & Profile Settings</a></li>
+            </ul>
         </div>
+    </div>
+{% endblock %}
 
-        <div class="card">
-            <h1>My Recent Documents</h1>
-        </div>
+{% block actions %}{% endblock %}
 
-        <div class="card">
-            <h1>Documents Shared With Me</h1>
-        </div>
-    {% else %}
-        {% include 'registration/please_log_in.html' %}
-    {% endif %}
+{% block no_docs_msg %}
+    You don't have any documents. Try looking at these other documents instead.
 {% endblock %}

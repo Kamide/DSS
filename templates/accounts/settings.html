@@ -14,7 +14,7 @@
 
 <div class="card">
     <h1>Profile Settings</h1>
-    <form class="body-text wide" method="post">
+    <form class="wide body-text" method="post">
         {% csrf_token %}
         <div class="form-block">{{ profile_form.as_p }}</div>
         <div class="form-block">

@@ -8,3 +8,12 @@ class UpdateProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['picture', 'interests']
+
+
+class UpdateMembershipForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        widgets = {
+            'cohort': forms.RadioSelect
+        }
+        fields = ['cohort']
