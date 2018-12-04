@@ -9,11 +9,21 @@ from django.contrib.auth.decorators import login_required
 
 @login_required
 def compose(request):
+    prefilled_to = request.GET.get('to')
     prefilled_msg = request.GET.get('showthis')
     doc_id = request.GET.get('inviteto')
+    autofilled = {}
+    is_invitation = False
+
+    if prefilled_to is not None:
+        autofilled['receiver'] = prefilled_to
+    if prefilled_msg is not None:
+        autofilled['msg_content'] = prefilled_msg
+    if doc_id is not None:
+        is_invitation = True
 
     if request.method == "POST":
-        message_form = MessageForm(request.POST)
+        message_form = MessageForm(request.POST, is_invitation_msg=is_invitation)
         if message_form.is_valid():
             msg = message_form.save(commit=False)
             msg.sender = request.user
@@ -38,10 +48,7 @@ def compose(request):
             messages.success(request, f'The message to {recipient} has been successfully sent!')
             return redirect('sent')
     else:
-        if prefilled_msg is None:
-            message_form = MessageForm()  # Type message here
-        else:
-            message_form = MessageForm(initial={'msg_content': prefilled_msg})
+        message_form = MessageForm(initial=autofilled, is_invitation_msg=is_invitation)
 
     context = {'message_form': message_form}
 

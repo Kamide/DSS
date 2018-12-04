@@ -75,7 +75,7 @@
             {% endif %}
             {% if request.user.is_authenticated %}
                 <span class="group gel-wrapper">
-                    <a href="{% url 'compose' %}">Message</a>
+                    <a href="{% url 'compose' %}?&to={{ user.id }}">Message</a>
                 </span>
             {% endif %}
         </div>

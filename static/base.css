@@ -131,16 +131,20 @@ p, .spacious {
     width: 100%;
     text-align: center;
     z-index: 1;
+    pointer-events: none;
 }
 
 .alert {
-    width: 100%;
     overflow: hidden;
     color: var(--main-bg-color, #fefefe);
     text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.75), 0px 2px 1px rgba(0, 0, 0, 0.5);
     animation-name: grow-shrink;
     animation-duration: 4s;
     animation-fill-mode: forwards;
+}
+
+.alert span {
+    pointer-events: visible;
 }
 
 .alert-success {

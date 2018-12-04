@@ -3,7 +3,7 @@
     <article class="media content-section">
         <img class="rounded-circle article-img" src="{{ object.owner.profile.image.url }}">
         <div class="article-metadata">
-            <a class="mr-2" href="#">{{object.owner }}</a>
+            <a class="mr-2" href="{% url 'individuals' object.owner.username %}">{{object.owner }}</a>
             {% load cohort_tags %}
             {% if object.owner == user or canedit or object.privacy == "RESTRICTED" and user|has_ou_rights %}
                 {% if object.lock_status == False %}

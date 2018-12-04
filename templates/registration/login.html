@@ -7,8 +7,10 @@
 {% endblock %}
 {% block msgs %}
     {% if form.errors %}
-        <div class="alert alert-error">The entered combination of username and password did not match any of our existing records. Please try again.</div>
-        {% endif %}
+        <div class="alert alert-error">
+            <span>The entered combination of username and password did not match any of our existing records. Please try again.</span>
+        </div>
+    {% endif %}
 {% endblock %}
 
 {% block content %}

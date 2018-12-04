@@ -6,6 +6,13 @@
     <em>You have no new messages.</em>
 {% endblock %}
 
+{% block msg_head %}
+    <tr>
+        <td>From</td>
+        <td><a href="{% url 'individuals' msg.sender.username %}">{{ msg.sender }}</a></td>
+    </tr>
+{% endblock %}
+
 {% block box %}
     {% with inbox_qs as mailbox_qs %}
         {{ block.super }}
