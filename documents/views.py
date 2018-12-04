@@ -4,6 +4,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.contrib import messages
 from django.core.files.base import ContentFile
 from .models import Document
+from django.contrib.auth.models import User
 from .forms import RemoveUserForm
 import filecmp
 
@@ -34,6 +35,7 @@ class DocDetailView(DetailView):
             context['canedit'] = True
         else:
             context['canedit'] = False
+        context['remove_user_form'] = self.form_class(doc=doc)
         return context
 
     def post(self, request, *args, **kwargs):
@@ -142,6 +144,20 @@ class DocDetailView(DetailView):
             doc.old_ver = '\n'.join(current)
             doc.save()
             return redirect('version/?&version='+str(request.POST['Version']))
+        elif request.POST.get("Kick"):
+            evictions = request.POST.getlist('users_that_write')
+            if evictions:
+                evicted = []
+                for u_id in evictions:
+                    doc.users_that_write.remove(u_id)
+                    evicted.append(User.objects.get(id=u_id).username)
+
+                if len(evicted) > 1:
+                    tense = ', '.join(evicted) + ' have'
+                else:
+                    tense = evicted[0] + ' has'
+                messages.success(self.request, f'{tense} been removed from the list of users who can edit.')
+
         return redirect(doc.get_absolute_url())
 
 
@@ -168,6 +184,11 @@ class DocCreateView(LoginRequiredMixin, CreateView):
 class DocUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Document
     fields = ['title', 'content']
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_update_form'] = True
+        return context
 
     def form_valid(self, form):
 #<<<<<<< HEAD

@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
 
-{% block title %}Create New Document{% endblock %}
+{% block title %}
+    {% if is_update_form %}
+        Update Document
+    {% else %}
+        Create New Document
+    {% endif %}
+{% endblock %}
 {% block head %}
 {% load static %}
 <link type="text/css" rel="stylesheet" href="{% static 'forms.css' %}">
@@ -13,7 +19,13 @@
 
 {% block content %}
 <div class="card">
-    <h1>Create New Doc</h1>
+    <h1>
+        {% if is_update_form %}
+            Update Document
+        {% else %}
+            Create New Document
+        {% endif %}
+    </h1>
     <form class="wide body-text" method="post">
             {% csrf_token %}
             <div class="form-block">{{ form }}</div>

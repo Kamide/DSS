@@ -12,6 +12,16 @@
                 {% endif %}
                     {% if object.owner == user and object.privacy == "SHARED" %}
                         <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'compose' %}?&inviteto={{ object.id }}&showthis={% url 'doc-invite' object.id %}">Invite Users</a>
+                        <hr />
+                        <form class="body-text" method="post">
+                            {% csrf_token %}
+                            <label>Remove Contributors:</label>
+                            <div class="bulletless-all">
+                                {{ remove_user_form.as_p }}
+                            </div>
+                            <input type="submit" name="Kick" value="Kick" />
+                        </form>
+                        <hr />
                     {% endif %}
                 {% if object.privacy == "SHARED" and object.owner == user or canedit %}
                     <form class="body-text" method="post">
