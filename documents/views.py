@@ -76,7 +76,6 @@ class DocDetailView(DetailView):
                             update += 1
                 cmds = []
                 index = 0
-                messages.success(request, remove)
                 while add > 0 or remove > 0:
                     if remove > 0:
                         for word in text:
@@ -86,7 +85,6 @@ class DocDetailView(DetailView):
                                 if remove == 0:
                                     break
                             else:
-                                messages.success(request, f'Works')
                                 index += 1
                     elif add > 0:
                         added = 0
@@ -99,14 +97,15 @@ class DocDetailView(DetailView):
                                     break
                             else:
                                 index += 1
-                index = 0
+                index = size_prev-1
                 while update > 0:
-                    for word in text:
+                    for word in reversed(text):
                         if word != text_prev[index]:
                             cmds.append("update " + str(index) + ' '+str(text_prev[index].decode("utf-8")))
                             update -= 1
-                            if update == 0:
-                                break
+                        index -= 1
+                        if update == 0 or index < 0:
+                            break
                 cmds.reverse()
                 with doc.cmd_txt.open('a') as f:
                     f.write(str(doc.version)+'\n')
@@ -120,8 +119,6 @@ class DocDetailView(DetailView):
         elif request.POST.get("Version"):
             doc = self.get_object()
             version = doc.version
-            print(doc.version)
-            print(request.POST['Version'])
             with doc.cur_ver.open() as f:
                 current = list(filter(None, (line.rstrip() for line in f)))
             for i in range(len(current)):
@@ -134,13 +131,12 @@ class DocDetailView(DetailView):
                     if version <= int(request.POST['Version']):
                         break
                     action = cmd.decode("utf-8").split()
-                    print(action)
                     if action[0] == 'remove':
                         current.pop(int(action[1]))
                     elif action[0] == 'add':
-                        current.insert(int(action[1]), action[2])
+                        current.insert(int(action[1]), ' '.join(action[2:]))
                     elif action[0] == 'update':
-                        current[int(action[1])] = action[2]
+                        current[int(action[1])] = ' '.join(action[2:])
                     else:
                         version -= 1
             doc.old_ver = '\n'.join(current)
@@ -173,6 +169,7 @@ class DocUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     fields = ['title', 'content']
 
     def form_valid(self, form):
+        self.object.view_count -= 1
         self.object = form.save()
         self.object.txt.delete()
         doc_txt = ContentFile(self.object.content)
@@ -192,6 +189,8 @@ class DocDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def test_func(self):
         doc = self.get_object()
+        doc.view_count -= 1
+        doc.save()
         if self.request.user == doc.owner:
             doc.txt.delete()
             doc.cmd_txt.delete()
