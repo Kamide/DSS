@@ -30,6 +30,9 @@
                     {% endif %}
                 </li>
             </ul>
+            {% if user|is_locked_out %}
+                LOCKED
+            {% else %}
             <ul class="footer spacious bulletless">
                 <li><a href="{% url 'inbox' %}">Check Inbox</a></li>
                 <li><a href="{% url 'sent' %}">Check Outbox</a></li>
@@ -38,6 +41,7 @@
                 {% endif %}
                 <li><a href="{% url 'settings' %}">Change Account & Profile Settings</a></li>
             </ul>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

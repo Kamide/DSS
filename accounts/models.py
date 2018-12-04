@@ -16,6 +16,8 @@ class Profile(models.Model):
     cohort = models.PositiveSmallIntegerField(choices=COHORTS, default=GUEST_USER)
     picture = models.URLField(blank=True)
     interests = models.CharField(max_length=100, blank=True)
+    is_locked = models.BooleanField(default=False)
+    doc_to_fix = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
         return str(self.user) + ' ' + self.get_cohort() + ' ' + self.picture + ' ' + self.interests
@@ -55,3 +57,6 @@ class Profile(models.Model):
 
     def has_su_rights(self):
         return self.cohort >= self.SUPER_USER
+
+    def locked(self):
+        return self.is_locked

@@ -20,6 +20,7 @@ class Document(models.Model):
     users_that_read = models.ManyToManyField(User, related_name="Readers")
     users_that_write = models.ManyToManyField(User, related_name="Contributors")
     pending_contributors = models.ManyToManyField(User, related_name="Invited")
+    last_edited_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name="Last_Editor", null=True)
 
     def __str__(self):
         return self.title

@@ -121,6 +121,7 @@ class DocCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
+        form.instance.last_edited_by = self.request.user
         self.object = form.save()
         doc_txt = ContentFile(self.object.content)
         self.object.txt.save(self.object.title+'.txt', doc_txt)
@@ -136,6 +137,7 @@ class DocUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
+        form.instance.last_edited_by = self.request.user
         self.object = form.save()
         self.object.txt.delete()
         doc_txt = ContentFile(self.object.content)

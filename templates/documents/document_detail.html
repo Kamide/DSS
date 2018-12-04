@@ -45,6 +45,7 @@
             <h2 class="article-title">{{ object.title }}</h2>
             {% load taboo_tags %}
             <p class="article-content">{{ object.content|censor_words|linebreaks }}</p>
+            {{ object.title|contains_taboo_words|default_if_none:'' }}
         {% else %}
             <p>You do not have access to this document. Make sure to check the privacy settings of a document.</p>
         {% endif %}
