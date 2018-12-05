@@ -3,6 +3,7 @@ from .models import Message
 from django.contrib.auth.models import User
 from accounts.models import Profile
 
+
 class MessageForm(forms.ModelForm):
     class Meta:
         model = Message

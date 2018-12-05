@@ -26,6 +26,8 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     # /taboo/...
     path('taboo/', include('taboo.urls')),
+    # /membership_application/...
+    path('membership_application/', include('memb_app.urls')),
     # /
     path('', views.index, name='home'),
     # /accounts/login/ [name='login']
