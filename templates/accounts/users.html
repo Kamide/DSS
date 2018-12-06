@@ -63,20 +63,23 @@
                     </span>
                 </a>
             </span>
-            {% if request.user|has_su_rights and user != request.user %}
-                <span class="group gel-wrapper">
-                    <a href="{% url 'individuals' user.username %}#manage">Manage</a>
-                </span>
-            {% endif %}
-            {% if request.user|has_ou_rights and user != request.user %}
-                <span class="group gel-wrapper">
-                    <a href="">Report</a>
-                </span>
-            {% endif %}
-            {% if request.user.is_authenticated %}
-                <span class="group gel-wrapper">
-                    <a href="{% url 'compose' %}?&to={{ user.id }}">Message</a>
-                </span>
+            {% load cohort_tags %}
+            {% if not request.user|is_locked_out %}
+                {% if request.user|has_su_rights and user != request.user %}
+                    <span class="group gel-wrapper">
+                        <a href="{% url 'individuals' user.username %}#manage">Manage</a>
+                    </span>
+                {% endif %}
+                {% if request.user|has_ou_rights and user != request.user %}
+                    <span class="group gel-wrapper">
+                        <a href="{% url 'compose' %}?&reason=FILE A COMPLAINT&showthis=I want to report {{ user.username }}.">Report</a>
+                    </span>
+                {% endif %}
+                {% if request.user.is_authenticated %}
+                    <span class="group gel-wrapper">
+                        <a href="{% url 'compose' %}?&to={{ user.id }}">Message</a>
+                    </span>
+                {% endif %}
             {% endif %}
         </div>
         {% if not forloop.last %}

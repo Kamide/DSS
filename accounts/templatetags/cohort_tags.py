@@ -93,6 +93,7 @@ def has_gu_rights(user):
 
 @register.filter(is_safe=True)
 def is_locked_out(user):
-    if user.profile.locked() is True:
-        return True
-    return False
+    try:
+        return user.profile.locked()
+    except AttributeError:
+        return False

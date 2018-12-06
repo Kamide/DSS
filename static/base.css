@@ -285,3 +285,7 @@ hr {
 legend {
     padding-left: 0px;
 }
+
+.error.card {
+    border-color: var(--invalid-color, #ff002c);
+}

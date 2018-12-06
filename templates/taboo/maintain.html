@@ -15,7 +15,7 @@
         <a class="{% if request.resolver_match.url_name == 'add_word' %}opened{% endif %}" href="{% url 'add_word' %}"><h2>Add Word</h2></a>
         <a class="{% if request.resolver_match.url_name == 'del_word' %}opened{% endif %}" href="{% url 'del_word' %}"><h2>Delete Word</h2></a>
     </div>
-    <div class="card" style="margin-top: 0;">
+    <div class="card">
         {% block subcontent %}
             <form class="wide body-text" method = "post">
                 {% csrf_token %}

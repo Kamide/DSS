@@ -21,7 +21,7 @@ form, input, button, textarea {
     box-sizing: border-box
 }
 
-.form-block, .form-block label, .wide {
+.form-block, .form-block label, .wide, .helptext {
     display: block;
 }
 

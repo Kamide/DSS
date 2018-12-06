@@ -8,6 +8,7 @@
     <link type="text/css" rel="stylesheet" href="{% static 'base.css' %}">
     <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans:100,100i,400,400i,700,700i" rel="stylesheet">
     {% block head %}{% endblock %}
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}">
   </head>
   <body onload="{% block onload %}{% endblock %}">
     <div id="header">
@@ -36,6 +37,13 @@
         </div>
     </div>
     <div id="content">
+        {% load cohort_tags %}
+        {% if user|is_locked_out %}
+        <div class="error card">
+            <h1>Locked</h1>
+            <p>⚠️ To lift this status off, please remove <em>all</em> <a href="{% url 'taboo_list' %}">taboo words</a> you have used in the document.</p>
+        </div>
+        {% endif %}
         {% block content %}{% endblock %}
     </div>
   </body>

@@ -54,7 +54,7 @@ def settings(request):
 def users(request):
     search = request.GET.get('search')
 
-    if search is None or search == '' or request.user.is_anonymous or request.user.profile.is_gu():
+    if search is None or search == '' or request.user.is_anonymous or request.user.profile.is_gu() or request.user.profile.is_locked:
         search = ''
         list_of_users = User.objects.all()
     else:

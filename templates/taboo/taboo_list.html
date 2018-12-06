@@ -9,27 +9,26 @@
     }
     #words:hover {
         filter: none;
-        transition: filter 1s;
+        transition: filter 0.2s;
+    }
+    #words li {
+        margin: 8px 0;
     }
 </style>
 {% endblock %}
 
 {% block content %}
-    <h1>List of Current Taboo Words:</h1>
-    {% if words_qs.count < 1 %}
-        <p>There are no taboo words on the list!</p>
-    {% else %}
-    <div id="words">
-        {% for t in words_qs %}
-            <span class="group">
-                <p><span>
-                    <ul>
-                        <li>{{ t.word }}</li>
-                    </ul>
-                </span></p>
-            </span>
-        {% endfor %}
+    <div class="card">
+        <h1>List of Current Taboo Words</h1>
+        {% if words_qs.count < 1 %}
+            <p>There are no taboo words on the list!</p>
+        {% else %}
+        <ul id="words">
+            {% for t in words_qs %}
+                <li>{{ t.word }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        <p class="footer">Click <a href="{% url 'users' %}">here</a> to message a suggested word to an OU/SU!</p>
     </div>
-    {% endif %}
-    <p>Click <a href="{% url 'users' %}">here</a> to message a suggested word to an SU!</p>
 {% endblock %}

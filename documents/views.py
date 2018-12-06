@@ -3,6 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib import messages
 from django.core.files.base import ContentFile
+from django.core.exceptions import PermissionDenied
 from .models import Document
 from django.contrib.auth.models import User
 from .forms import RemoveUserForm
@@ -25,11 +26,18 @@ class DocDetailView(DetailView):
     model = Document
     form_class = RemoveUserForm
 
+    def dispatch(self, request, *args, **kwargs):
+        doc = self.get_object()
+        if not self.request.user.is_anonymous and self.request.user.profile.is_locked and self.request.user.profile.doc_to_fix != doc.title:
+            raise PermissionDenied
+        else:
+            doc.view_count += 1
+            doc.save()
+        return super().dispatch(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         doc = self.get_object()
-        doc.view_count += 1
-        doc.save()
         can_edit = doc.users_that_write.filter(id=self.request.user.id)
         if can_edit.exists():
             context['canedit'] = True
@@ -164,10 +172,21 @@ class DocDetailView(DetailView):
 class DocVersionView(DetailView):
     model = Document
 
+    def dispatch(self, request, *args, **kwargs):
+        doc = self.get_object()
+        if not self.request.user.is_anonymous and self.request.user.profile.is_locked and self.request.user.profile.doc_to_fix != doc.title:
+            raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)
+
 
 class DocCreateView(LoginRequiredMixin, CreateView):
     model = Document
     fields = ['title', 'privacy', 'content']
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_anonymous and self.request.user.profile.is_locked:
+            raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
@@ -183,6 +202,12 @@ class DocCreateView(LoginRequiredMixin, CreateView):
 class DocUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Document
     fields = ['title', 'content']
+
+    def dispatch(self, request, *args, **kwargs):
+        doc = self.get_object()
+        if not self.request.user.is_anonymous and self.request.user.profile.is_locked and self.request.user.profile.doc_to_fix != doc.title:
+            raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

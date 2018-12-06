@@ -4,11 +4,21 @@
 {% block head %}
 {% load static %}
 <link type="text/css" rel="stylesheet" href="{% static 'forms.css' %}">
+<link type="text/css" rel="stylesheet" href="{% static 'flexboxes.css' %}">
+<link type="text/css" rel="stylesheet" href="{% static 'widgets.css' %}">
+<style>
+    .distributed > * {
+        margin-bottom: 0;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
 <div class="card">
-    <h1>Compose Message</h1>
+    <div class="distributed">
+        <h1>Compose Message</h1>
+        <span class="group"><a class="gel-anchor body-text" href="{% url 'compose' %}">{{ reset_msg }}</a></span>
+    </div>
     <form class="wide body-text" method = "post">
         {% csrf_token %}
         <div class="form-block">{{ message_form.as_p }}</div>

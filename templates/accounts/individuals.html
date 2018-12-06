@@ -47,25 +47,28 @@
     {% endblock %}
 
     {% block actions %}
-        <fieldset id="actions" class="card">
-            <legend><h1>Actions</h1></legend>
-            <a class="gel-anchor body-text" href="{% url 'compose' %}">Message</a>
-        </fieldset>
+        {% load cohort_tags %}
+        {% if not user|is_locked_out %}
+            <fieldset id="actions" class="card">
+                <legend><h1>Actions</h1></legend>
+                <a class="gel-anchor body-text" href="{% url 'compose' %}?&to={{ individual.id }}">Message</a>
+            </fieldset>
 
-        {% if user|has_su_rights and individual != user %}
-            <div id="manage" class="card">
-                <h1>Manage</h1>
-                <form class="auto-width body-text" method="post">
-                    {% csrf_token %}
-                    <label>Group:</label>
-                    <div class="bulletless-all">
-                        {% for radio in um_form %}
-                            {{ radio }}
-                        {% endfor %}
-                    </div>
-                    <input type="submit" value="Change" />
-                </form>
-            </div>
+            {% if user|has_su_rights and individual != user %}
+                <div id="manage" class="card">
+                    <h1>Manage</h1>
+                    <form class="auto-width body-text" method="post">
+                        {% csrf_token %}
+                        <label>Group:</label>
+                        <div class="bulletless-all">
+                            {% for radio in um_form %}
+                                {{ radio }}
+                            {% endfor %}
+                        </div>
+                        <input type="submit" value="Change" />
+                    </form>
+                </div>
+            {% endif %}
         {% endif %}
     {% endblock %}
 
@@ -85,23 +88,25 @@
         </table>
     </div>
 
-    {% if has_docs %}
-        <div class="card blend tight">
-            <h1>3 Most Recent Documents</h1>
-            <hr />
-            {% include 'documents/docs_gallery.html' with docs=documents %}
-        </div>
-    {% else %}
-        <div class="card blend">
-            <h1>3 Most Popular Documents (in DSS)</h1>
-            <hr />
-            <p>
-                {% block no_docs_msg %}
-                    {{ individual.username|capfirst }} doesn't have any documents. Try looking at these other documents instead.
-                {% endblock %}
-            </p>
-            {% include 'documents/docs_gallery.html' with docs=documents %}
-        </div>
+    {% if not user|is_locked_out or user|is_locked_out and user == individual %}
+        {% if has_docs %}
+            <div class="card blend tight">
+                <h1>3 Most Recent Documents</h1>
+                <hr />
+                {% include 'documents/docs_gallery.html' with docs=documents %}
+            </div>
+        {% else %}
+            <div class="card blend">
+                <h1>3 Most Popular Documents (in DSS)</h1>
+                <hr />
+                <p>
+                    {% block no_docs_msg %}
+                        {{ individual.username|capfirst }} doesn't have any documents. Try looking at these other documents instead.
+                    {% endblock %}
+                </p>
+                {% include 'documents/docs_gallery.html' with docs=documents %}
+            </div>
+        {% endif %}
     {% endif %}
 {% else %}
     {% include 'registration/please_log_in.html' %}

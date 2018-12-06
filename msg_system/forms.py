@@ -10,9 +10,9 @@ class MessageForm(forms.ModelForm):
         fields = ['receiver', 'reason', 'msg_content']
 
     def __init__(self, *args, **kwargs):
-        is_invitation_msg = kwargs.pop('is_invitation_msg')
+        is_contacting_authority = kwargs.pop('is_contacting_authority')
         super(MessageForm, self).__init__(*args, **kwargs)
-        if is_invitation_msg:
+        if is_contacting_authority:
             users = User.objects.all()
             self.fields['receiver'].queryset = User.objects.filter(profile__cohort__gte=Profile.ORDINARY_USER)
         else:

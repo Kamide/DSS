@@ -5,25 +5,37 @@ from msg_system.models import Message
 from documents.models import Document
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
 
 
 @login_required
 def compose(request):
+    if request.user.profile.is_locked:
+        raise PermissionDenied
+
     prefilled_to = request.GET.get('to')
+    prefilled_reason = request.GET.get('reason')
     prefilled_msg = request.GET.get('showthis')
     doc_id = request.GET.get('inviteto')
     autofilled = {}
-    is_invitation = False
+    authority_wanted = False
+    reset_msg = ''
 
     if prefilled_to is not None:
         autofilled['receiver'] = prefilled_to
+    if prefilled_reason is not None:
+        autofilled['reason'] = prefilled_reason
     if prefilled_msg is not None:
         autofilled['msg_content'] = prefilled_msg
+    if prefilled_reason == 'FILE A COMPLAINT':
+        reset_msg = 'Cancel Report'
+        authority_wanted = True
     if doc_id is not None:
-        is_invitation = True
+        reset_msg = 'Cancel Invitation'
+        authority_wanted = True
 
     if request.method == "POST":
-        message_form = MessageForm(request.POST, is_invitation_msg=is_invitation)
+        message_form = MessageForm(request.POST, is_contacting_authority=authority_wanted)
         if message_form.is_valid():
             msg = message_form.save(commit=False)
             msg.sender = request.user
@@ -48,9 +60,10 @@ def compose(request):
             messages.success(request, f'The message to {recipient} has been successfully sent!')
             return redirect('sent')
     else:
-        message_form = MessageForm(initial=autofilled, is_invitation_msg=is_invitation)
+        message_form = MessageForm(initial=autofilled, is_contacting_authority=authority_wanted)
 
-    context = {'message_form': message_form}
+    context = {'message_form': message_form,
+               'reset_msg': reset_msg}
 
     return render(request, "msg_system/compose.html", context)
 
@@ -62,6 +75,9 @@ def mailbox(request):
 
 @login_required
 def inbox(request):
+    if request.user.profile.is_locked:
+        raise PermissionDenied
+
     current_user = request.user.id
     inbox_qs = Message.objects.all().filter(receiver=current_user)
     context = {"inbox_qs": inbox_qs}
@@ -70,6 +86,9 @@ def inbox(request):
 
 @login_required
 def sent(request):
+    if request.user.profile.is_locked:
+        raise PermissionDenied
+
     current_user = request.user.id
     sent_qs = Message.objects.all().filter(sender=current_user)
     context = {"sent_qs": sent_qs}
