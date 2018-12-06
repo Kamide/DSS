@@ -17,21 +17,23 @@ def censor_words(content):
 
 
 @register.filter(is_safe=True)
-def contains_taboo_words(title):
-    doc = Document.objects.get(title=title)
+def contains_taboo_words(id):
+    doc = Document.objects.get(id=id)
     doc_censored_content = censor_words(doc.content)
+    doc_censored_title = censor_words(doc.title)
+    censored_content = doc_censored_content + doc_censored_title
     last_edited_by = doc.last_edited_by
     if last_edited_by:
-        word_list = doc_censored_content.split()
+        word_list = censored_content.split()
         for word in word_list:
             if word == 'UNK':
                 profile = Profile.objects.get(user=last_edited_by)
                 profile.is_locked = True
-                profile.doc_to_fix = title
+                profile.doc_to_fix = id
                 profile.save()
                 return
         profile = Profile.objects.get(user=last_edited_by)
-        if profile.is_locked is True and profile.doc_to_fix == title:
+        if profile.is_locked is True and profile.doc_to_fix == id:
             profile.is_locked = False
             profile.save()
     return

@@ -29,5 +29,7 @@ def update_user_rights(sender, instance, **kwargs):
         instance.user.is_superuser = True
     if instance.has_su_rights():
         instance.user.is_staff = True
+    if instance.is_locked:
+        instance.user.is_staff = False
 
     instance.user.save()

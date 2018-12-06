@@ -28,7 +28,7 @@ class DocDetailView(DetailView):
 
     def dispatch(self, request, *args, **kwargs):
         doc = self.get_object()
-        if not self.request.user.is_anonymous and self.request.user.profile.is_locked and self.request.user.profile.doc_to_fix != doc.title:
+        if not self.request.user.is_anonymous and self.request.user.profile.is_locked and self.request.user.profile.doc_to_fix != doc.id:
             raise PermissionDenied
         else:
             doc.view_count += 1
@@ -174,7 +174,7 @@ class DocVersionView(DetailView):
 
     def dispatch(self, request, *args, **kwargs):
         doc = self.get_object()
-        if not self.request.user.is_anonymous and self.request.user.profile.is_locked and self.request.user.profile.doc_to_fix != doc.title:
+        if not self.request.user.is_anonymous and self.request.user.profile.is_locked and self.request.user.profile.doc_to_fix != doc.id:
             raise PermissionDenied
         return super().dispatch(request, *args, **kwargs)
 
@@ -205,7 +205,7 @@ class DocUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def dispatch(self, request, *args, **kwargs):
         doc = self.get_object()
-        if not self.request.user.is_anonymous and self.request.user.profile.is_locked and self.request.user.profile.doc_to_fix != doc.title:
+        if not self.request.user.is_anonymous and self.request.user.profile.is_locked and self.request.user.profile.doc_to_fix != doc.id:
             raise PermissionDenied
         return super().dispatch(request, *args, **kwargs)
 
@@ -234,6 +234,11 @@ class DocUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 class DocDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Document
     success_url = '/'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_anonymous and self.request.user.profile.is_locked:
+            raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)
 
     def test_func(self):
         doc = self.get_object()

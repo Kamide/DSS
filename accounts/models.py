@@ -17,7 +17,7 @@ class Profile(models.Model):
     picture = models.URLField(blank=True)
     interests = models.CharField(max_length=100, blank=True)
     is_locked = models.BooleanField(default=False)
-    doc_to_fix = models.CharField(max_length=100, blank=True)
+    doc_to_fix = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
         return str(self.user) + ' ' + self.get_cohort() + ' ' + self.picture + ' ' + self.interests
