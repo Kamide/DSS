@@ -67,23 +67,24 @@ class DocDetailView(DetailView):
             if self.request.user.username == doc.locked_by and not filecmp.cmp(doc.txt.name, doc.cur_ver.name):
                 add = 0
                 remove = 0
-                update = 0
                 with doc.txt.open() as f:
-                    text = list(filter(None, (line.rstrip() for line in f)))
+                    text = list(f)
+                    text = b''.join(text)
+                    text = text.decode()
+                    text = text.replace('\r','')
+                    text = text.splitlines()
                     size = len(text)
                 with doc.cur_ver.open() as f:
-                    text_prev = list(filter(None, (line.rstrip() for line in f)))
+                    text_prev = list(f)
+                    text_prev = b''.join(text_prev)
+                    text_prev = text_prev.decode()
+                    text_prev = text_prev.replace('\r','')
+                    text_prev = text_prev.splitlines()
                     size_prev = len(text_prev)
                 if size - size_prev > 0:
                     remove = size - size_prev
-                    for word in text_prev:
-                        if word not in text:
-                            update += 1
                 else:
                     add = size_prev - size
-                    for word in text:
-                        if word not in text_prev:
-                            update += 1
                 cmds = []
                 index = 0
                 while add > 0 or remove > 0:
@@ -92,6 +93,7 @@ class DocDetailView(DetailView):
                             if index >= size_prev or word != text_prev[index]:
                                 cmds.append("remove "+str(index))
                                 remove -= 1
+                                text.pop(index)
                                 if remove == 0:
                                     break
                             else:
@@ -100,22 +102,22 @@ class DocDetailView(DetailView):
                         added = 0
                         for word in text_prev:
                             if index >= size or word != text[index]:
-                                cmds.append("add "+str(index+added)+' '+str(word.decode("utf-8")))
+                                cmds.append("add "+str(index+added)+' '+str(word))
                                 add -= 1
+                                text.insert(index+added, str(word))
                                 added += 1
                                 if add == 0:
                                     break
                             else:
                                 index += 1
-                index = size_prev-1
-                while update > 0:
-                    for word in reversed(text):
-                        if word != text_prev[index]:
-                            cmds.append("update " + str(index) + ' '+str(text_prev[index].decode("utf-8")))
-                            update -= 1
-                        index -= 1
-                        if update == 0 or index < 0:
-                            break
+                index = len(text_prev)-1
+                print(text)
+                print(text_prev)
+                for word in reversed(text):
+                    if word != text_prev[index]:
+                        cmds.append("update " + str(index) + ' '+str(text_prev[index]))
+                    index -= 1
+
                 cmds.reverse()
                 with doc.cmd_txt.open('a') as f:
                     f.write(str(doc.version)+'\n')
@@ -130,17 +132,25 @@ class DocDetailView(DetailView):
             doc = self.get_object()
             version = doc.version
             with doc.cur_ver.open() as f:
-                current = list(filter(None, (line.rstrip() for line in f)))
-            for i in range(len(current)):
-                current[i] = current[i].decode("utf-8")
+                #current = list(filter(None, (line.rstrip() for line in f)))
+                current = list(f)
+                current = b''.join(current)
+                current = current.decode()
+                current = current.replace('\r', '')
+                current = current.splitlines()
             with doc.cmd_txt.open() as f:
-                commands = list(filter(None, (line.rstrip() for line in f)))
+                #commands = list(filter(None, (line.rstrip() for line in f)))
+                commands = list(f)
+                commands = b''.join(commands)
+                commands = commands.decode()
+                commands = commands.replace('\r', '')
+                commands = commands.splitlines()
             commands.reverse()
             while version > int(request.POST['Version']):
                 for cmd in commands:
                     if version <= int(request.POST['Version']):
                         break
-                    action = cmd.decode("utf-8").split()
+                    action = cmd.split()
                     if action[0] == 'remove':
                         current.pop(int(action[1]))
                     elif action[0] == 'add':
