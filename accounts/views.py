@@ -4,10 +4,10 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.db.models import Q, Sum
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from .forms import UpdateProfileForm, UpdateMembershipForm
 from .models import Profile
 from documents.models import Document
+from dss.views import paginate
 
 
 def index(request):
@@ -65,40 +65,10 @@ def users(request):
         for query in queries:
             results = results | Q(username__icontains=query) | Q(profile__interests__icontains=query)
         list_of_users = User.objects.filter(results)
+        if list_of_users.count() < 1:
+            messages.error(request, f'Sorry, no results were found for {search}.')
 
-    if list_of_users.count() < 1:
-        messages.error(request, f'Sorry, no results were found for {search}.')
-
-    count = request.GET.get('count')
-
-    if count is None:
-        count = 10
-    else:
-        try:
-            count = max(1, int(count))
-        except ValueError:
-            count = 10
-
-    paginator = Paginator(list_of_users, count)
-    page = request.GET.get('page')
-
-    if page is None:
-        page = 1
-    else:
-        try:
-            page = max(0, int(page))
-            if page > paginator.num_pages:
-                page = paginator.num_pages
-        except ValueError:
-            page = 1
-
-    list_of_users = paginator.get_page(page)
-
-    # Get 5 numbers before and after the current page number
-    # Ignore numbers that render invalid page numbers
-    sequence = []
-    for i in range(max(page-5, 1), min(page+5, paginator.num_pages) + 1):
-        sequence.append(i)
+    list_of_users, count, sequence = paginate(request, list_of_users)
 
     context = {
         'list_of_users': list_of_users,

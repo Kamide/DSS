@@ -37,10 +37,13 @@
                     <li><a href="{% url 'inbox' %}">Check Inbox</a></li>
                     <li><a href="{% url 'sent' %}">Check Outbox</a></li>
                     {% if user|is_su %}
-                    <li><a href="{% url 'add_word' %}">Maintain Taboo Words List</a></li>
-                    <li><a href="{% url 'manage' %}">Manage Membership Applications</a> </li>
-                    {% elif user|is_gu %}
-                    <li><a href="{% url 'apply' %}">Apply to become an OU</a></li>
+                        <li><a href="{% url 'add_word' %}">Maintain Taboo Words List</a></li>
+                        <li><a href="{% url 'manage' %}">Manage Membership Applications</a> </li>
+                    {% else %}
+                        <li><a href="{% url 'add_word' %}">View Taboo Words List</a></li>
+                        {% if user|is_gu %}
+                            <li><a href="{% url 'apply' %}">Apply to Become an OU</a></li>
+                        {% endif %}
                     {% endif %}
                     <li><a href="{% url 'settings' %}">Change Account & Profile Settings</a></li>
                 {% endif %}

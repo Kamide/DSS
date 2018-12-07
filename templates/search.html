@@ -31,8 +31,8 @@
                             <input type="hidden" name="count" value="{{ count }}" />
                             <input type="submit" value="Search" />
                         </div>
+                    <div class="form-block">{% block filters %}{% endblock %}</div>
                     </form>
-                    <div class="body-text">{% block filters %}{% endblock %}</div>
                     <p class="footer">{% block helptext %}{% endblock %}</p>
                     {% include 'toggler.html' with uid='search' %}
                 </div>
@@ -48,6 +48,13 @@
             <form class="form-block wide body-text" method="get">
                 <div class="distributed">
                     <input type="hidden" name="search" value="{{ search }}" />
+                    {% block filter_passer %}
+                        {% for filter, checked in filters.items %}
+                            {% if checked %}
+                                <input type="hidden" name="criteria" value="{{ filter }}" />
+                            {% endif %}
+                        {% endfor %}
+                    {% endblock %}
                     <label id="limiter" for="count">Items per page:</label>
                     <input id="count" class="filler" type="number" name="count" min="1" step="1" value="{{ count }}" />
                     <input type="submit" value="Change" />
@@ -61,22 +68,22 @@
             <div class="paginator distributed footer body-text">
                 <span class="group filler left">
                     {% if list_of_items.has_previous %}
-                        <a href="?search={{ search }}&count={{ count }}&page=1">&lt;&lt; First</a>
-                        <a href="?search={{ search }}&count={{ count }}&page={{ list_of_items.previous_page_number }}">Previous</a>
+                        <a href="?search={{ search }}&count={{ count }}&page=1{% if search_criteria %}{{ search_criteria }}{% endif %}">&lt;&lt; First</a>
+                        <a href="?search={{ search }}&count={{ count }}&page={{ list_of_items.previous_page_number }}{% if search_criteria %}{{ search_criteria }}{% endif %}">Previous</a>
                     {% endif %}
                 </span>
                 <span class="group center">
                     <i>{{ list_of_items.number }} of {{ list_of_items.paginator.num_pages }}</i>
                     <span class="space-above">
                         {% for i in sequence %}
-                            <a class="gel-anchor {% if i == list_of_items.number %}gel-anchor-active{% endif %}" href="?search={{ search }}&count={{ count }}&page={{ i }}">{{ i }}</a>
+                            <a class="gel-anchor {% if i == list_of_items.number %}gel-anchor-active{% endif %}" href="?search={{ search }}&count={{ count }}&page={{ i }}{% if search_criteria %}{{ search_criteria }}{% endif %}">{{ i }}</a>
                         {% endfor %}
                     </span>
                 </span>
                 <span class="group filler right">
                     {% if list_of_items.has_next %}
-                        <a href="?search={{ search }}&count={{ count }}&page={{ list_of_items.paginator.num_pages }}">Last &gt;&gt;</a>
-                        <a href="?search={{ search }}&count={{ count }}&page={{ list_of_items.next_page_number }}">Next</a>
+                        <a href="?search={{ search }}&count={{ count }}&page={{ list_of_items.paginator.num_pages }}{% if search_criteria %}{{ search_criteria }}{% endif %}">Last &gt;&gt;</a>
+                        <a href="?search={{ search }}&count={{ count }}&page={{ list_of_items.next_page_number }}{% if search_criteria %}{{ search_criteria }}{% endif %}">Next</a>
                     {% endif %}
                 </span>
             </div>

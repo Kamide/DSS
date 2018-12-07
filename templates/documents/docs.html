@@ -5,14 +5,28 @@
 {{ block.super }}
 {% load static %}
 <link type="text/css" rel="stylesheet" href="{% static 'docs.css' %}">
+<style>
+    #sbo {
+        margin: 0;
+    }
+</style>
 {% endblock %}
 
 {% block filters %}
-    <a class="gel-anchor" href="{% url 'docs' %}">Clear Search Filters</a>
+    <div class="distributed">
+        <div class="auto-width">
+            <h3 id="sbo">Based On</h3>
+            {% for filter, checked in filters.items %}
+                <label><input type="checkbox" name="criteria" value="{{ filter }}" {% if checked %}checked="true"{% endif %} /> {{ filter|capfirst }}</label>
+            {% endfor %}
+        </div>
+        <div><a class="gel-anchor" href="{% url 'docs' %}">Clear Search Filters</a></div>
+    </div>
 {% endblock %}
 
 {% block helptext %}
     Try searching for a title, author, and or content of a document, then press enter or search to continue.
+    If you enable searching based on author, documents not owned by you will also be shown.
 {% endblock %}
 
 {% block content %}
@@ -23,24 +37,22 @@
         <div id="taboos" class="card">
             <h1>Taboo Words</h1>
             <p>Click <a href="{% url 'taboo_list' %}">here</a> to view the current list of taboo words.</p>
-            <p>Remember: abusing taboo words will result in punishment!</p>
+            <p>Remember: Abusing taboo words will result in punishment!</p>
             {% include 'toggler.html' with uid='taboos' %}
         </div>
 
         {% load cohort_tags %}
-        {% if user|is_gu %}
+        {% if not user.is_authenticated or user|is_gu %}
             <div class="card blend tight">
                 <h1>Popular Documents</h1>
                     <hr />
                 {% include 'documents/docs_gallery.html' %}
             </div>
         {% else %}
-            {% if user.is_authenticated %}
-                <fieldset class="card">
-                    <legend><h1>Create New Doc</h1></legend>
-                    <div class="body-text"><a class="gel-anchor" href="{% url 'doc-create' %}">New Doc</a></div>
-                </fieldset>
-            {% endif %}
+            <fieldset class="card">
+                <legend><h1>Create New Doc</h1></legend>
+                <div class="body-text"><a class="gel-anchor" href="{% url 'doc-create' %}">New Doc</a></div>
+            </fieldset>
             <div class="card blend tight">
                 <h1>Recent Documents</h1>
                     <hr />
@@ -52,11 +64,10 @@
                     {% endblock %}
                 </div>
                 {% block paginator %}
-                    {% with page_obj as list_of_items %}
+                    {% with docs as list_of_items %}
                         {{ block.super }}
                     {% endwith %}
                 {% endblock %}
             </div>
         {% endif %}
 {% endblock %}
-

@@ -8,7 +8,9 @@
             {% if object.owner == user or canedit or object.privacy == "RESTRICTED" and user|has_ou_rights %}
                 {% if object.lock_status == False %}
                     <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'doc-update' object.id %}">Edit</a>
-                    <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'doc-delete' object.id %}">Delete</a>
+                    {% if not user|is_locked_out %}
+                        <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'doc-delete' object.id %}">Delete</a>
+                    {% endif %}
                 {% endif %}
                     {% if object.owner == user and object.privacy == "SHARED" %}
                         <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'compose' %}?&inviteto={{ object.id }}&showthis={% url 'doc-invite' object.id %}">Invite Users</a>
@@ -52,10 +54,10 @@
                         </div>
                     </form>
             {% endblock %}
-            <h2 class="article-title">{{ object.title }}</h2>
             {% load taboo_tags %}
-            <p class="article-content">{{ object.content|censor_words|linebreaks }}</p>
-            {{ object.title|contains_taboo_words|default_if_none:'' }}
+            {% load formatting_tags %}
+            <h2 class="article-title">{{ object.title|censor_words }}</h2>
+            <p class="article-content" style="word-wrap: pre;">{{ object.content|censor_words|linebreaksbr|preserve_spaces|parse_formatting_tags }}</p>
         {% else %}
             <p>You do not have access to this document. Make sure to check the privacy settings of a document.</p>
         {% endif %}

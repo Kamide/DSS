@@ -41,7 +41,7 @@
         {% if user|is_locked_out %}
         <div class="error card">
             <h1>Locked</h1>
-            <p>⚠️ To lift this status off, please remove <em>all</em> <a href="{% url 'taboo_list' %}">taboo words</a> you have used in the document.</p>
+            <p>⚠️ To lift this status off, please remove <em>all</em> <a href="{% url 'taboo_list' %}">taboo words</a> you have used in this <a href="{% url 'doc-detail' user.profile.doc_to_fix %}">document</a>.</p>
         </div>
         {% endif %}
         {% block content %}{% endblock %}

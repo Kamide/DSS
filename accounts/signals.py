@@ -1,4 +1,4 @@
-from django.db.models.signals import pre_save, post_save
+from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import User
 from .models import Profile
@@ -29,5 +29,7 @@ def update_user_rights(sender, instance, **kwargs):
         instance.user.is_superuser = True
     if instance.has_su_rights():
         instance.user.is_staff = True
+    if instance.is_locked:
+        instance.user.is_staff = False
 
     instance.user.save()

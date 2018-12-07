@@ -10,7 +10,7 @@
 <div class="card">
     <h1>Manage Applications</h1>
     {% if applications_qs.count < 1 %}
-        <p>No new or pending applications</p>
+        <p>No new or pending applications.</p>
     {% else %}
         {% for apps in applications_qs %}
             <a href="{% url 'single_application' apps.applicant %}">

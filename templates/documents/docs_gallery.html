@@ -1,7 +1,7 @@
 <div class="gallery">
     {% for doc in docs %}
         {% load cohort_tags %}
-        {% if not user|is_locked_out or user.profile.doc_to_fix == doc.title %}
+        {% if not user|is_locked_out or user.profile.doc_to_fix == doc.id %}
             <div class="card {% if user|is_locked_out %}urgent{% endif %}">
                 <div class="distributed author">
                     <div class="group"><a href="{% url 'individuals' doc.owner.username %}">{% include 'accounts/pfp.html' with user=doc.owner %}</a></div>
@@ -9,7 +9,8 @@
                 </div>
                 <ul class="bulletless footer">
                     <a href="{% url 'doc-detail' doc.id %}">
-                        <li><h1>{{ doc.title }}</h1></li>
+                        {% load taboo_tags %}
+                        <li><h1>{{ doc.title|censor_words }}</h1></li>
                         <li><h3>Privacy: {{ doc.privacy }}</h3></li>
                         <li><h3>Number of Views: {{ doc.view_count }}</h3></li>
                     </a>

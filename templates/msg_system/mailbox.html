@@ -41,7 +41,7 @@
                         <tbody>
                             <tr>
                                 {% load message_tags %}
-                                <td colspan="2">{{ msg.msg_content|linebreaks|local_urlize|urlize }}</td>
+                                <td colspan="2">{{ msg.msg_content|linebreaks|urlize|local_urlize }}</td>
                             </tr>
                         </tbody>
                     </table>

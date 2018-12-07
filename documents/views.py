@@ -4,10 +4,12 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.contrib import messages
 from django.core.files.base import ContentFile
 from django.core.exceptions import PermissionDenied
+from django.db.models import Q
 from .models import Document
 from django.contrib.auth.models import User
 from .forms import RemoveUserForm
 import filecmp
+from dss.views import paginate
 
 
 def index(request):
@@ -21,6 +23,51 @@ class DocListView(ListView):
     context_object_name = 'docs'
     ordering = ['-view_count']
 
+    def get_context_data(self, **kwargs):
+        filters = {
+            'title': False,
+            'author': False,
+            'content': False,
+        }
+
+        context = super().get_context_data(**kwargs)
+        docs = self.get_queryset()
+        search = self.request.GET.get('search')
+        criteria = self.request.GET.getlist('criteria')
+        search_criteria = ''
+        for c in criteria:
+            filters[c] = True
+            search_criteria += '&criteria=' + c
+
+        if search is None or search == '' or search_criteria == '' or self.request.user.is_anonymous or self.request.user.profile.is_gu() or self.request.user.profile.is_locked:
+            search = ''
+            filters['title'] = filters['content'] = True
+            filters['author'] = False
+        else:
+            # Django: A Q object (django.db.models.Q) is an object used to
+            # encapsulate a collection of keyword arguments.
+            queries = search.split()
+            results = Q()
+            for query in queries:
+                if filters['title']:
+                    results = results | Q(title__icontains=query)
+                if filters['author']:
+                    results = results | Q(owner__username__icontains=query)
+                if filters['content']:
+                    results = results | Q(content__icontains=query)
+            if filters['author']:
+                docs = docs.filter(results)
+            else:
+                docs = docs.filter(results, owner=self.request.user)
+            if docs.count() < 1:
+                messages.error(self.request, f'Sorry, no results were found for {search}.')
+
+        context['search'] = search
+        context['filters'] = filters
+        context['search_criteria'] = search_criteria
+        context[self.context_object_name], context['count'], context['sequence'] = paginate(self.request, docs, default_count=15)
+        return context
+
 
 class DocDetailView(DetailView):
     model = Document
@@ -28,7 +75,7 @@ class DocDetailView(DetailView):
 
     def dispatch(self, request, *args, **kwargs):
         doc = self.get_object()
-        if not self.request.user.is_anonymous and self.request.user.profile.is_locked and self.request.user.profile.doc_to_fix != doc.title:
+        if not self.request.user.is_anonymous and self.request.user.profile.is_locked and self.request.user.profile.doc_to_fix != doc.id:
             raise PermissionDenied
         else:
             doc.view_count += 1
@@ -184,7 +231,7 @@ class DocVersionView(DetailView):
 
     def dispatch(self, request, *args, **kwargs):
         doc = self.get_object()
-        if not self.request.user.is_anonymous and self.request.user.profile.is_locked and self.request.user.profile.doc_to_fix != doc.title:
+        if not self.request.user.is_anonymous and self.request.user.profile.is_locked and self.request.user.profile.doc_to_fix != doc.id:
             raise PermissionDenied
         return super().dispatch(request, *args, **kwargs)
 
@@ -215,7 +262,7 @@ class DocUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def dispatch(self, request, *args, **kwargs):
         doc = self.get_object()
-        if not self.request.user.is_anonymous and self.request.user.profile.is_locked and self.request.user.profile.doc_to_fix != doc.title:
+        if not self.request.user.is_anonymous and self.request.user.profile.is_locked and self.request.user.profile.doc_to_fix != doc.id:
             raise PermissionDenied
         return super().dispatch(request, *args, **kwargs)
 
@@ -225,7 +272,6 @@ class DocUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return context
 
     def form_valid(self, form):
-        form.instance.owner = self.request.user
         form.instance.last_edited_by = self.request.user
         self.object.view_count -= 1
         self.object = form.save()
@@ -244,6 +290,11 @@ class DocUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 class DocDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Document
     success_url = '/'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_anonymous and self.request.user.profile.is_locked:
+            raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)
 
     def test_func(self):
         doc = self.get_object()

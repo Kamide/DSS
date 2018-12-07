@@ -42,6 +42,10 @@
     <a class="gel-anchor" href="{% url 'users' %}">Clear Search Filters</a>
 {% endblock %}
 
+{% block filter_passer %}
+    {# No filters, so don't pass any. #}
+{% endblock %}
+
 {% block helptext %}
     Try searching for a name or an interest, then press enter or search to continue.
 {% endblock %}
