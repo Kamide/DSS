@@ -1,65 +1,111 @@
 {% extends 'base.html' %}
+
+{% block title %}{{ object.title }} - {{ object.owner }}{% endblock %}
+{% block head %}
+{{ block.super }}
+{% load static %}
+<link href="https://fonts.googleapis.com/css?family=IBM+Plex+Mono" rel="stylesheet">
+<link type="text/css" rel="stylesheet" href="{% static 'forms.css' %}">
+<link type="text/css" rel="stylesheet" href="{% static 'flexboxes.css' %}">
+<link type="text/css" rel="stylesheet" href="{% static 'widgets.css' %}">
+<link type="text/css" rel="stylesheet" href="{% static 'document_detail.css' %}">
+<script type="text/javascript" src="{% static 'effects.js' %}"></script>
+{% endblock %}
+{% block onload %}collapseItems();{% endblock %}
+
 {% block content %}
-    <article class="media content-section">
-        <img class="rounded-circle article-img" src="{{ object.owner.profile.image.url }}">
-        <div class="article-metadata">
-            <a class="mr-2" href="{% url 'individuals' object.owner.username %}">{{object.owner }}</a>
-            {% load cohort_tags %}
-            {% if object.owner == user or canedit or object.privacy == "RESTRICTED" and user|has_ou_rights %}
-                {% if object.lock_status == False %}
-                    <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'doc-update' object.id %}">Edit</a>
-                    {% if not user|is_locked_out %}
-                        <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'doc-delete' object.id %}">Delete</a>
+    {% block toolbox %}
+        <div id="doc-details-{{ object.id }}" class="card">
+            <ul id="doc-toolbox" class="bulletless">
+                <li>
+                    {% include 'accounts/pfp.html' with user=object.owner %}
+                </li>
+                <li>
+                    <h2><a class="gel-anchor" href="{% url 'individuals' object.owner.username %}">{{ object.owner }}</a></h2>
+                </li>
+                {% load cohort_tags %}
+                {% if object.owner == user or canedit or object.privacy == "RESTRICTED" and user|has_ou_rights %}
+                    {% if object.lock_status == False %}
+                        <li>
+                            <h2 class="group"><a class="gel-anchor" href="{% url 'doc-update' object.id %}">Edit</a></h2>
+                        </li>
+                        {% if not user|is_locked_out %}
+                            <li>
+                                <h2><a class="gel-anchor" href="{% url 'doc-delete' object.id %}">Delete</a></h2>
+                            </li>
+                        {% endif %}
                     {% endif %}
+                        {% if object.owner == user and object.privacy == "SHARED" %}
+                            <li>
+                                <h2><a class="gel-anchor" href="{% url 'compose' %}?&inviteto={{ object.id }}&showthis={% url 'doc-invite' object.id %}">Invite Users</a></h2>
+                            </li>
+                        {% endif %}
                 {% endif %}
-                    {% if object.owner == user and object.privacy == "SHARED" %}
-                        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'compose' %}?&inviteto={{ object.id }}&showthis={% url 'doc-invite' object.id %}">Invite Users</a>
-                        <hr />
-                        <form class="body-text" method="post">
-                            {% csrf_token %}
-                            <label>Remove Contributors:</label>
-                            <div class="bulletless-all">
-                                {{ remove_user_form.as_p }}
-                            </div>
-                            <input type="submit" name="Kick" value="Kick" />
-                        </form>
-                        <hr />
-                    {% endif %}
-                {% if object.privacy == "SHARED" and object.owner == user or canedit %}
-                    <form class="body-text" method="post">
-                        {% csrf_token %}
-                            <div class="form-group">
-                                {% if object.lock_status == False %}
-                                    <button type="submit" name="Lock" value="Locked">Lock</button>
-                                {% else %}
-                                    <p>This document has been locked by {{ object.locked_by }} for updating.</p>
-                                    <button type="submit" name="Unlock" value="Unlocked">Unlock</button>
-                                    <button type="submit" name="Update" value="Updated">Update</button>
-                                {% endif %}
-                            </div>
-                    </form>
+                {% if object.owner != user and user|has_gu_rights %}
+                    <li>
+                        <h2><a class="gel-anchor" href="{% url 'compose' %}?&to={{ object.owner.id }}&reason=FILE A COMPLAINT&showthis=I have a complaint about {{ object.title }}.">File a Complaint</a></h2>
+                    </li>
                 {% endif %}
+            </ul>
+            {% if object.owner == user and object.privacy == "SHARED" %}
+            <hr />
+                <form class="auto-width body-text" method="post">
+                    {% csrf_token %}
+                    <label>Remove Contributors:</label>
+                    <div class="bulletless-all">
+                        {{ remove_user_form.as_p }}
+                    </div>
+                    <input type="submit" name="Kick" value="Kick">
+                </form>
+            {% endif %}
+            {% if object.privacy == "SHARED" and object.owner == user or canedit %}
+            <hr />
+                <form class="body-text" method="post">
+                    {% csrf_token %}
+                        <div class="form-group">
+                            {% if object.lock_status == False %}
+                                <button type="submit" name="Lock" value="Locked">Lock</button>
+                            {% else %}
+                                <p>This document has been locked by {{ object.locked_by }} for updating.</p>
+                                <button type="submit" name="Unlock" value="Unlocked">Unlock</button>
+                                <button type="submit" name="Update" value="Updated">Update</button>
+                            {% endif %}
+                        </div>
+                </form>
+            {% endif %}
+            {% load formatting_tags %}
+            {% if object.privacy == "SHARED" and object.owner == user or canedit %}
+                {% include 'toggler.html' with uid="doc-details-"|concatenater:object.id %}
             {% endif %}
         </div>
+    {% endblock %}
 
-        {% if object.owner == user or object.privacy == "PUBLIC" or object.privacy == "RESTRICTED" and user|has_gu_rights or object.privacy == "SHARED" and object.owner == user or canedit %}
-            {% block limiter %}
-                <h1>{% block cardtitle %}{% endblock %}</h1>
+    {% block doc_content %}
+        <div class="card blend">
+            {% load taboo_tags %}
+            {% if object.owner == user or object.privacy == "PUBLIC" or object.privacy == "RESTRICTED" and user|has_gu_rights or object.privacy == "SHARED" and object.owner == user or canedit %}
+                {% if object.privacy == "SHARED" %}
                     <form class="body-text" method="post">
                         {% csrf_token %}
-                        <div class="form-block wide distributed">
-                            <label id="ipp" for="count">Version Number:</label>
-                            <input id="count" class="filler" type="number" name="Version" min="0" max="{{ object.version }}" step="1" value="{{ object.version }}" />
-                            <input type="submit" value="Change" />
+                        <div class="wide distributed">
+                            <label class="space-right" for="count">Version Number:</label>
+                            <input id="count" class="filler" type="number" name="Version" min="0" max="{{ object.version }}" step="1" value="{{ object.version }}">
+                            <input type="submit" value="Change">
                         </div>
                     </form>
-            {% endblock %}
-            {% load taboo_tags %}
-            {% load formatting_tags %}
-            <h2 class="article-title">{{ object.title|censor_words }}</h2>
-            <p class="article-content" style="word-wrap: pre;">{{ object.content|censor_words|linebreaksbr|preserve_spaces|parse_formatting_tags }}</p>
-        {% else %}
-            <p>You do not have access to this document. Make sure to check the privacy settings of a document.</p>
-        {% endif %}
-    </article>
+                <hr />
+                {% endif %}
+                <h1>{{ object.title|censor_words }}</h1>
+                {% if object.formatting_enabled %}
+                    <p id="doc-content">{{ object.content|censor_words|linebreaksbr|parse_formatting_tags }}</p>
+                {% else %}
+                    <p id="doc-content">{{ object.content|censor_words|linebreaksbr }}</p>
+                {% endif %}
+            {% else %}
+                <h1>{{ object.title|censor_words }}</h1>
+                <p>You do not have access to this document. Make sure to check the privacy settings of a document.
+                To read more about privacy settings, please check <a href="{% url 'about' %}">this</a> page.</p>
+            {% endif %}
+        </div>
+    {% endblock %}
 {% endblock content %}

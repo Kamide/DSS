@@ -2,16 +2,11 @@
 
 {% block head %}
 {% load static %}
+<link href="https://fonts.googleapis.com/css?family=IBM+Plex+Mono" rel="stylesheet">
 <link type="text/css" rel="stylesheet" href="{% static 'forms.css' %}">
 <link type="text/css" rel="stylesheet" href="{% static 'flexboxes.css' %}">
 <link type="text/css" rel="stylesheet" href="{% static 'paginator.css' %}">
 <link type="text/css" rel="stylesheet" href="{% static 'widgets.css' %}">
-<style>
-    #limiter {
-        margin: 8px;
-        margin-left: 0;
-    }
-</style>
 <script type="text/javascript" src="{% static 'effects.js' %}"></script>
 {% endblock %}
 {% block onload %}collapseItems();{% endblock %}
@@ -55,7 +50,7 @@
                             {% endif %}
                         {% endfor %}
                     {% endblock %}
-                    <label id="limiter" for="count">Items per page:</label>
+                    <label class="space-right" for="count">Items per page:</label>
                     <input id="count" class="filler" type="number" name="count" min="1" step="1" value="{{ count }}" />
                     <input type="submit" value="Change" />
                 </div>

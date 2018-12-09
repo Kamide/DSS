@@ -1,0 +1,33 @@
+.pfp {
+    width: 64px;
+    height: 64px;
+}
+
+#doc-toolbox * {
+    display: inline;
+    vertical-align: middle;
+}
+
+#doc-toolbox .gel-anchor {
+    padding: 4px 8px;
+}
+
+#doc-toolbox li:not(:last-child) {
+    padding-right: 4px;
+}
+
+#doc-content {
+    white-space: pre;
+}
+
+#doc-content img {
+    max-width: 100%;
+}
+
+code {
+    font-family: 'IBM Plex Mono', monospace;
+}
+
+ins {
+    text-decoration-skip-ink: auto;
+}

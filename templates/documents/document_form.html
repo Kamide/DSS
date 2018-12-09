@@ -9,7 +9,11 @@
 {% endblock %}
 {% block head %}
 {% load static %}
+<link href="https://fonts.googleapis.com/css?family=IBM+Plex+Mono" rel="stylesheet">
 <link type="text/css" rel="stylesheet" href="{% static 'forms.css' %}">
+<link type="text/css" rel="stylesheet" href="{% static 'tables.css' %}">
+<link type="text/css" rel="stylesheet" href="{% static 'document_detail.css' %}">
+<link type="text/css" rel="stylesheet" href="{% static 'document_form.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -23,11 +27,49 @@
     </h1>
     <form class="wide body-text" method="post">
             {% csrf_token %}
-            <div class="form-block">{{ form }}</div>
+            <div id="edit-form" class="form-block">
+                {{ form.as_p }}
+            </div>
             <div class="form-block">
                 <input type="hidden" name="next" value="{{ next }}" />
                 <input type="submit" value="Post" />
             </div>
     </form>
+    <div class="footer body-text">
+        <table id="formatting-tips">
+            <thead>
+                Enabling formatting allows you to style your documents.
+                Equivalent opening and closing formatting tags must be on the same line.
+                Please nest formatting tags properly when mixing them;
+                inner spacing is not recommended.
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Bolded Text</strong></td>
+                    <td>[b]...[/b]</td>
+                </tr>
+                <tr>
+                    <td><em>Italicized Text</em></td>
+                    <td>[i]...[/i]</td>
+                </tr>
+                <tr>
+                    <td><code>Monospaced Text</code></td>
+                    <td>[code]...[/code]</td>
+                </tr>
+                <tr>
+                    <td><ins>Underlined Text</ins></td>
+                    <td>[u]...[/u]</td>
+                </tr>
+                <tr>
+                    <td><del>Strikethrough Text</del></td>
+                    <td>[s]...[/s]</td>
+                </tr>
+                <tr>
+                    <td>🌃</td>
+                    <td>[img]https://example.com/image.png[/img]</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock %}

@@ -53,6 +53,10 @@ p, .spacious {
     padding: 0;
 }
 
+.bulletless-all * {
+    margin: 6px 2px;
+}
+
 /* Navigation */
 
 #header {

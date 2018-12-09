@@ -1,0 +1,31 @@
+#edit-form > p:last-child > label {
+    display: inline;
+}
+
+#id_formatting_enabled {
+    display: inline;
+    width: auto;
+    margin: 0 4px;
+    vertical-align: middle;
+}
+
+#formatting-tips {
+    width: 100%;
+    white-space: nowrap;
+}
+
+#formatting-tips tbody {
+    text-indent: 12px;
+}
+
+#formatting-tips td:not(:first-child) {
+    padding-left: 12px;
+}
+
+#formatting-tips td:not(:last-child) {
+    padding-right: 24px;
+}
+
+#formatting-tips td:last-child {
+    font-family: 'IBM Plex Mono', monospace;
+}

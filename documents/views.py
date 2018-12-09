@@ -208,7 +208,7 @@ class DocDetailView(DetailView):
                         version -= 1
             doc.old_ver = '\n'.join(current)
             doc.save()
-            return redirect('version/?&version='+str(request.POST['Version']))
+            return redirect('version/' + str(request.POST['Version']))
         elif request.POST.get("Kick"):
             evictions = request.POST.getlist('users_that_write')
             if evictions:
@@ -235,10 +235,18 @@ class DocVersionView(DetailView):
             raise PermissionDenied
         return super().dispatch(request, *args, **kwargs)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        try:
+            context['version'] = self.kwargs['version']
+        except KeyError:
+            context['version'] = '?'
+        return context
+
 
 class DocCreateView(LoginRequiredMixin, CreateView):
     model = Document
-    fields = ['title', 'privacy', 'content']
+    fields = ['title', 'privacy', 'content', 'formatting_enabled']
 
     def dispatch(self, request, *args, **kwargs):
         if not self.request.user.is_anonymous and self.request.user.profile.is_locked:
@@ -258,7 +266,7 @@ class DocCreateView(LoginRequiredMixin, CreateView):
 
 class DocUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Document
-    fields = ['title', 'content']
+    fields = ['title', 'content', 'formatting_enabled']
 
     def dispatch(self, request, *args, **kwargs):
         doc = self.get_object()
@@ -298,14 +306,18 @@ class DocDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def test_func(self):
         doc = self.get_object()
-        doc.view_count -= 1
-        doc.save()
         if self.request.user == doc.owner:
+            return True
+        return False
+
+    def post(self, request, *args, **kwargs):
+        if request.POST.get("Delete"):
+            doc = self.get_object()
             doc.txt.delete()
             doc.cmd_txt.delete()
             doc.cur_ver.delete()
-            return True
-        return False
+            doc.delete()
+        return redirect('docs')
 
 
 class DocInviteView(LoginRequiredMixin, UserPassesTestMixin, DetailView):

@@ -38,6 +38,11 @@ input, textarea {
     width: auto;
 }
 
+.space-right {
+    margin: 8px;
+    margin-left: 0;
+}
+
 textarea {
     min-width: 2em;
     min-height: 2em;

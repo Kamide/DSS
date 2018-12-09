@@ -12,7 +12,8 @@
     right: 0;
     margin: 12px;
     border-radius: 4px;
-    font-family: monospace;
+    font-family: 'IBM Plex Mono', monospace;
+    line-height: 1em;
 }
 
 .gel-anchor, .gel-wrapper {
@@ -57,11 +58,11 @@
         border-right: none;
     }
 
-    .slash-separated > span:not(:last-child) {
+    .slash-separated > *:not(:last-child) {
         margin-right: 16px;
     }
 
-    .slash-separated > span:not(:last-child):after {
+    .slash-separated > *:not(:last-child):after {
         content: "";
         position: absolute;
         top: 0;

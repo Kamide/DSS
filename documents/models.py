@@ -8,6 +8,7 @@ class Document(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=30, unique=True)
     privacy = models.TextField(max_length=10, choices=PRIVACY_LEVELS)
+    formatting_enabled = models.BooleanField(default=False)
     content = models.TextField()
     old_ver = models.TextField(default='')
     txt = models.FileField(null=True, upload_to='documents/')
