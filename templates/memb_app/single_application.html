@@ -3,22 +3,41 @@
 {% block title %}{{ app.applicant }}'s Application{% endblock %}
 {% block head %}
 {% load static %}
-<link type="text/css" rel="stylesheet" href="{% static 'forms.css' %}">
+<link type="text/css" rel="stylesheet" href="{% static 'tables.css' %}">
+<style>
+    td:not(:first-child) {
+        padding-left: 6px;
+    }
+    td:not(:last-child) {
+        padding-right: 6px;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
 <div class="card">
     <h1>{{ app.applicant }}'s Application</h1>
-    <ul>
-        {% if app.app_interests == "" %}
-            <li>No Interests</li>
-        {% else %}
-            <li>{{ app.app_interests }}</li>
-        {% endif %}
-        <li>{{ app.extra_details }}</li>
-    </ul>
-    <a href="{% url 'approve' app.applicant %}">Approve</a>
-    <br />
-    <a href="{% url 'deny' app.applicant %}">Deny</a>
+    <table class="body-text">
+        <tbody>
+            <tr>
+                <td>Interests</td>
+                <td>
+                    {% if app.app_interests == "" %}
+                        <em>N/A</em>
+                    {% else %}
+                        {{ app.app_interests }}
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">{{ app.extra_details }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <p>
+        <a href="{% url 'approve' app.applicant %}">Approve</a>
+        <br />
+        <a href="{% url 'deny' app.applicant %}">Deny</a>
+    </p>
 </div>
 {% endblock %}

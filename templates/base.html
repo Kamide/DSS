@@ -5,10 +5,13 @@
     <title>{% block title %}{% endblock %} - DSS</title>
     <meta charset="utf-8">
     {% load static %}
-    <link type="text/css" rel="stylesheet" href="{% static 'base.css' %}">
-    <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans:100,100i,400,400i,700,700i" rel="stylesheet">
-    {% block head %}{% endblock %}
     <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}">
+    <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans:100,100i,400,400i,700,700i" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="{% static 'base.css' %}">
+    {% block head %}{% endblock %}
+    {% if user.profile.dark_theme_enabled %}
+        <link type="text/css" rel="stylesheet" href="{% static 'themes.css' %}">
+    {% endif %}
   </head>
   <body onload="{% block onload %}{% endblock %}">
     <div id="header">

@@ -19,7 +19,7 @@
         <div class="form-block">{{ profile_form.as_p }}</div>
         <div class="form-block">
             <input type="hidden" name="next" value="" />
-            <input type="submit" value="Update" />
+            <input type="submit" name="Profile" value="Update" />
         </div>
     </form>
     <p class="footer">
@@ -28,5 +28,16 @@
         To optimize searchability, use spaces, commas, dashes, and/or underscores
         when separating different interests.
     </p>
+</div>
+
+<div class="card">
+    <h1>Theme Settings</h1>
+    <form class="wide body-text" method="post">
+        {% csrf_token %}
+        <div class="auto-width">{{ theme_form.as_p }}</div>
+        <div class="form-block">
+            <input type="hidden" name="next" value="" />
+            <input type="submit" name="Theme" value="Update" />
+        </div>
 </div>
 {% endblock %}

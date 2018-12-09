@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.db.models import Q, Sum
-from .forms import UpdateProfileForm, UpdateMembershipForm
+from .forms import UpdateProfileForm, UpdateThemeForm, UpdateMembershipForm
 from .models import Profile
 from documents.models import Document
 from dss.views import paginate
@@ -40,15 +40,28 @@ def signup(request):
 @login_required
 def settings(request):
     if request.method == 'POST':
-        profile_form = UpdateProfileForm(request.POST, instance=request.user.profile)
-        if profile_form.is_valid():
-            profile_form.save()
-            messages.success(request, f'Your profile settings have been saved!')
-            return redirect('index')
+        if request.POST.get('Profile'):
+            profile_form = UpdateProfileForm(request.POST, instance=request.user.profile)
+            if profile_form.is_valid():
+                profile_form.save()
+                messages.success(request, f'Your profile settings have been saved!')
+                return redirect('settings')
+        if request.POST.get('Theme'):
+            theme_form = UpdateThemeForm(request.POST, instance=request.user.profile)
+            if theme_form.is_valid():
+                theme_form.save()
+                messages.success(request, f'Your theme settings have been saved!')
+                return redirect('settings')
     else:
         profile_form = UpdateProfileForm(instance=request.user.profile)
+        theme_form = UpdateThemeForm(instance=request.user.profile)
 
-    return render(request, 'accounts/settings.html', {'profile_form': profile_form})
+    context = {
+        'profile_form': profile_form,
+        'theme_form': theme_form,
+    }
+
+    return render(request, 'accounts/settings.html', context)
 
 
 def users(request):

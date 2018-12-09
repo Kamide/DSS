@@ -9,6 +9,14 @@
     --main-border-color: #dedede;
     --main-border-color-emphasis: #9e9e9e;
 
+    --nav-bg-gradient: linear-gradient(rgba(254, 254, 254, 0.8), rgba(245, 245, 245, 1));
+    --card-bg-color: rgba(254, 254, 254, 0.8);
+
+    --shadow-color: 0, 0, 0;
+    --nav-shadow-color: rgba(var(--shadow-color), 0.1);
+    --card-shadow-color: rgba(var(--shadow-color), 0.05);
+    --footer-shadow-color: rgba(var(--shadow-color), 0.02);
+
     --link-color: #5d92a4;
     --link-color-emphasis: #5da486;
 
@@ -17,6 +25,15 @@
 
     --highlight-color-dark: rgba(100, 240, 200, 0.8);
     --highlight-color-light: rgba(100, 240, 200, 0.1);
+
+    --alert-text-color: var(--main-bg-color);
+    --alert-text-shadow-color: var(--main-fg-color);
+    --alert-success-color-accent: rgba(70, 160, 180, 0.75);
+    --alert-success-color-dominant: rgba(120, 250, 205, 0.25);
+    --alert-error-color-accent: rgba(195, 64, 82, 0.75);
+    --alert-error-color-dominant: rgba(246, 179, 116, 0.25);
+    --alert-info-color-accent: rgba(155, 165, 175, 0.75);
+    --alert-info-color-dominant: rgba(215, 185, 215, 0.25);
 }
 
 html, body, h1, h2, h3, h4, h5, h6, p, #nav {
@@ -28,7 +45,6 @@ html, body, h1, h2, h3, h4, h5, h6, p, #nav {
 html {
     background-color: var(--html-bg-color, #fbfbfb);
     background-image: var(--html-bg-image, url('noise.png'));
-    font-size: 16px;
 }
 
 body {
@@ -78,7 +94,7 @@ p, .spacious {
     flex-direction: column;
     position: relative;
     padding: 0 12px;
-    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 2px 2px var(--nav-shadow-color, rgba(0, 0, 0, 0.1));
     z-index: 1;
 }
 
@@ -140,8 +156,8 @@ p, .spacious {
 
 .alert {
     overflow: hidden;
-    color: var(--main-bg-color, #fefefe);
-    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.75), 0px 2px 1px rgba(0, 0, 0, 0.5);
+    color: var(--alert-text-color, #fefefe);
+    text-shadow: 0px 2px 4px var(--alert-text-shadow-color, #3d3d3d), 0px 2px 1px var(--alert-text-shadow-color, #3d3d3d);
     animation-name: grow-shrink;
     animation-duration: 4s;
     animation-fill-mode: forwards;
@@ -152,18 +168,18 @@ p, .spacious {
 }
 
 .alert-success {
-    background-image: linear-gradient(rgba(70, 160, 180, 0.75), rgba(120, 250, 205, 0.25));
-    box-shadow: 0px 4px 8px rgba(120, 250, 205, 0.25);
+    background-image: linear-gradient(var(--alert-success-color-accent, rgba(70, 160, 180, 0.75)), var(--alert-success-color-dominant, rgba(120, 250, 205, 0.25)));
+    box-shadow: 0px 4px 8px var(--alert-success-color-dominant, rgba(120, 250, 205, 0.25));
 }
 
 .alert-error {
-    background-image: linear-gradient(rgba(195, 64, 82, 0.75), rgba(246, 179, 116, 0.25));
-    box-shadow: 0px 4px 8px rgba(246, 179, 116, 0.25);
+    background-image: linear-gradient(var(--alert-error-color-accent, rgba(195, 64, 82, 0.75)), var(--alert-error-color-dominant, rgba(246, 179, 116, 0.25)));
+    box-shadow: 0px 4px 8px var(--alert-error-color-dominant, rgba(246, 179, 116, 0.25));
 }
 
 .alert-info {
-    background-image: linear-gradient(rgba(155, 165, 175, 0.75), rgba(215, 185, 215, 0.25));
-    box-shadow: 0px 4px 8px rgba(215, 185, 215, 0.25);
+    background-image: linear-gradient(var(--alert-info-color-accent, rgba(155, 165, 175, 0.75)), var(--alert-info-color-dominant, rgba(215, 185, 215, 0.25)));
+    box-shadow: 0px 4px 8px var(--alert-info-color-dominant, rgba(215, 185, 215, 0.25));
 }
 
 /* Containers */
@@ -180,7 +196,7 @@ p, .spacious {
     border-width: thin 0;
     border-style: solid;
     border-color: var(--main-border-color, #dedede);
-    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.05);
+    box-shadow: 0px 2px 2px var(--card-shadow-color, rgba(0, 0, 0, 0.05));
 }
 
 .card a {
@@ -205,7 +221,7 @@ hr {
     padding-bottom: 0;
     border-top: thin solid var(--main-border-color, #dedede);
     border-radius: 8px;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.02), transparent);
+    background-image: linear-gradient(var(--footer-shadow-color, rgba(0, 0, 0, 0.02)), transparent);
 }
 
 .pfp {
@@ -230,7 +246,7 @@ hr {
         flex-direction: row;
         padding: 0;
         background-color: transparent;
-        background-image: linear-gradient(rgba(254, 254, 254, 0.8), rgba(245, 245, 245, 1));
+        background-image: var(--nav-bg-gradient, linear-gradient(rgba(254, 254, 254, 0.8), rgba(245, 245, 245, 1)));
     }
 
     #nav a {
@@ -250,7 +266,7 @@ hr {
     .card {
         border: thin solid var(--main-border-color, #dedede);
         border-radius: 4px;
-        background-color: rgba(254, 254, 254, 0.8);
+        background-color: var(--card-bg-color, rgba(254, 254, 254, 0.8));
     }
 }
 

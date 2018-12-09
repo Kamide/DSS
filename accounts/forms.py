@@ -10,6 +10,12 @@ class UpdateProfileForm(forms.ModelForm):
         fields = ['picture', 'interests']
 
 
+class UpdateThemeForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['dark_theme_enabled']
+
+
 class UpdateMembershipForm(forms.ModelForm):
     class Meta:
         model = Profile

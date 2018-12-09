@@ -10,14 +10,14 @@
 <div class="card">
     <h1>Manage Applications</h1>
     {% if applications_qs.count < 1 %}
-        <p>No new or pending applications.</p>
+        <p><em>No new or pending applications.</em></p>
     {% else %}
         {% for apps in applications_qs %}
-            <a href="{% url 'single_application' apps.applicant %}">
-                <ul>
-                    <li><b>{{ apps.applicant }}</b></li>
-                </ul>
-            </a>
+            <ul class="body-text">
+                <li>
+                    <h3><a href="{% url 'single_application' apps.applicant %}">{{ apps.applicant }}</a></h3>
+                </li>
+            </ul>
         {% endfor %}
     {% endif %}
 </div>

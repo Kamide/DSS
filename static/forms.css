@@ -1,3 +1,9 @@
+:root {
+    --input-bg-static: linear-gradient(rgb(254, 254, 254), rgb(246, 248, 250));
+    --input-bg-hover: linear-gradient(rgb(255, 255, 255), rgb(250, 252, 254));
+    --input-bg-active: linear-gradient(rgb(254, 254, 254), rgb(236, 238, 240));
+}
+
 form {
     margin: 8px 0;
 }
@@ -69,13 +75,13 @@ input:invalid:focus, input[type=url]:invalid, textarea:invalid {
 }
 
 button, input[type=submit] {
-    background-image: linear-gradient(rgb(254, 254, 254), rgb(246, 248, 250));
+    background-image: var(--input-bg-static, linear-gradient(rgb(254, 254, 254), rgb(246, 248, 250)));
 }
 
 button:hover, input[type=submit]:hover {
-    background-image: linear-gradient(rgb(255, 255, 255), rgb(250, 252, 254));
+    background-image: var(--input-bg-hover, linear-gradient(rgb(255, 255, 255), rgb(250, 252, 254)));
 }
 
 button:active, input[type=submit]:active {
-    background-image: linear-gradient(rgb(254, 254, 254), rgb(236, 238, 240));
+    background-image: var(--input-bg-active, linear-gradient(rgb(254, 254, 254), rgb(236, 238, 240)));
 }

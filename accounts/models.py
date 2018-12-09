@@ -16,6 +16,7 @@ class Profile(models.Model):
     cohort = models.PositiveSmallIntegerField(choices=COHORTS, default=GUEST_USER)
     picture = models.URLField(blank=True)
     interests = models.CharField(max_length=100, blank=True)
+    dark_theme_enabled = models.BooleanField(default=False)
     is_locked = models.BooleanField(default=False)
     doc_to_fix = models.IntegerField(blank=True, null=True)
 
