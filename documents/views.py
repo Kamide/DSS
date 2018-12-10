@@ -10,6 +10,7 @@ from django.contrib.auth.models import User
 from .forms import RemoveUserForm
 import filecmp
 from dss.views import paginate
+import datetime
 
 
 def index(request):
@@ -112,6 +113,7 @@ class DocDetailView(DetailView):
                 messages.error(request, f'You did not lock this document initially')
         elif request.POST.get("Update"):
             if self.request.user.username == doc.locked_by and not filecmp.cmp(doc.txt.name, doc.cur_ver.name):
+                doc.update_info = 'Last updated by ' + doc.locked_by + ' on ' + str(datetime.datetime.now().strftime('%c'))
                 add = 0
                 remove = 0
                 with doc.txt.open() as f:

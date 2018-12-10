@@ -96,6 +96,7 @@
                 <hr />
                 {% endif %}
                 <h1>{{ object.title|censor_words }}</h1>
+                <h3>{{ object.update_info }}</h3>
                 {% if object.formatting_enabled %}
                     <p id="doc-content">{{ object.content|censor_words|linebreaksbr|parse_formatting_tags }}</p>
                 {% else %}
