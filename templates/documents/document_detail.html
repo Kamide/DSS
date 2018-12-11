@@ -58,7 +58,7 @@
                     <input type="submit" name="Kick" value="Kick">
                 </form>
             {% endif %}
-            {% if object.privacy == "SHARED" and object.owner == user or canedit %}
+            {% if object.owner == user or canedit %}
             <hr />
                 <form class="body-text" method="post">
                     {% csrf_token %}
@@ -84,17 +84,15 @@
         <div class="card blend">
             {% load taboo_tags %}
             {% if object.owner == user or object.privacy == "PUBLIC" or object.privacy == "RESTRICTED" and user|has_gu_rights or object.privacy == "SHARED" and object.owner == user or canedit %}
-                {% if object.privacy == "SHARED" %}
-                    <form class="body-text" method="post">
-                        {% csrf_token %}
-                        <div class="wide distributed">
-                            <label class="space-right" for="count">Version Number:</label>
-                            <input id="count" class="filler" type="number" name="Version" min="0" max="{{ object.version }}" step="1" value="{{ object.version }}">
-                            <input type="submit" value="Change">
-                        </div>
-                    </form>
+                <form class="body-text" method="post">
+                    {% csrf_token %}
+                    <div class="wide distributed">
+                        <label class="space-right" for="count">Version Number:</label>
+                        <input id="count" class="filler" type="number" name="Version" min="0" max="{{ object.version }}" step="1" value="{{ object.version }}">
+                        <input type="submit" value="Change">
+                    </div>
+                </form>
                 <hr />
-                {% endif %}
                 <h1>{{ object.title|censor_words }}</h1>
                 <h3>{{ object.update_info }}</h3>
                 {% if object.formatting_enabled %}
