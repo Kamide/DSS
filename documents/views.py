@@ -257,7 +257,7 @@ class DocCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
-        form.instance.last_edited_by = self.request.user
+        form.instance.last_edited_by = self.request.user  # updates last_edited_by attribute to current user
         self.object = form.save()
         doc_txt = ContentFile(self.object.content)
         self.object.txt.save(self.object.title+'.txt', doc_txt)
@@ -282,7 +282,7 @@ class DocUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return context
 
     def form_valid(self, form):
-        form.instance.last_edited_by = self.request.user
+        form.instance.last_edited_by = self.request.user  # updates last_edited_by attribute to current user
         self.object.view_count -= 1
         self.object = form.save()
         self.object.txt.delete()

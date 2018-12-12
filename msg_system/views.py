@@ -36,11 +36,11 @@ def compose(request):
 
     if request.method == "POST":
         message_form = MessageForm(request.POST, is_contacting_authority=authority_wanted)
-        if message_form.is_valid():
+        if message_form.is_valid():  # all user input fields are filled out
             msg = message_form.save(commit=False)
-            msg.sender = request.user
+            msg.sender = request.user  # puts current user in sender field
             msg.save()
-            recipient = message_form.cleaned_data.get('receiver')
+            recipient = message_form.cleaned_data.get('receiver')  # gets name of receiver for later success/fail msg
 
             if doc_id is not None:
                 try:
@@ -79,6 +79,7 @@ def inbox(request):
         raise PermissionDenied
 
     current_user = request.user.id
+    # queryset of all Message objects that have the receiver as the person currently viewing his mailbox
     inbox_qs = Message.objects.all().filter(receiver=current_user)
     context = {"inbox_qs": inbox_qs}
     return render(request, "msg_system/inbox.html", context)
@@ -90,6 +91,7 @@ def sent(request):
         raise PermissionDenied
 
     current_user = request.user.id
+    # queryset of all Message objects that have the sender as the person currently viewing his mailbox
     sent_qs = Message.objects.all().filter(sender=current_user)
     context = {"sent_qs": sent_qs}
     return render(request, "msg_system/sent.html", context)

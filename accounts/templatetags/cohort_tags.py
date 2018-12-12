@@ -91,6 +91,7 @@ def has_gu_rights(user):
         return False
 
 
+# checks if user is in a state of lockout
 @register.filter(is_safe=True)
 def is_locked_out(user):
     try:

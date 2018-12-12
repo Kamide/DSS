@@ -8,6 +8,9 @@ MESSAGE_REASONS = (
 )
 
 
+# Message model (or table) with attributes: sender, receiver, reason and message content
+# reason can only be above choices
+# foreign keys: sender and receiver (points to User table)
 class Message(models.Model):
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name="sender")
     receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name="receiver")
