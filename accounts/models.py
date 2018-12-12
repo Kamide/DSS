@@ -61,3 +61,6 @@ class Profile(models.Model):
 
     def locked(self):
         return self.is_locked
+
+    def get_userid(self):
+        return self.user.id

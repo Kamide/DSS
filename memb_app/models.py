@@ -10,5 +10,8 @@ class MembApp(models.Model):
     extra_details = models.TextField(null=True)
     is_pending = models.BooleanField(default=False)
 
+    def __str__(self):
+        return str(self.applicant)
+
 
 

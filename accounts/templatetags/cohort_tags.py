@@ -1,6 +1,7 @@
 from django import template
 from django.template.defaultfilters import stringfilter
 from django.contrib.auth.models import Group
+from memb_app.models import MembApp
 
 register = template.Library()
 
@@ -91,10 +92,18 @@ def has_gu_rights(user):
         return False
 
 
-# checks if user is in a state of lockout
 @register.filter(is_safe=True)
 def is_locked_out(user):
     try:
         return user.profile.locked()
     except AttributeError:
+        return False
+
+
+@register.filter(is_safe=True)
+def already_applied(user):
+    apps_qs = MembApp.objects.all().filter(applicant=user.profile.get_userid())
+    if apps_qs.count() > 0:
+        return True
+    else:
         return False

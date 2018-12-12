@@ -42,7 +42,9 @@
                     {% else %}
                         <li><a href="{% url 'add_word' %}">View Taboo Words List</a></li>
                         {% if user|is_gu %}
-                            <li><a href="{% url 'apply' %}">Apply to Become an OU</a></li>
+                            {% if not user|already_applied %}
+                                <li><a href="{% url 'apply' %}">Apply to Become an OU</a></li>
+                            {% endif %}
                         {% endif %}
                     {% endif %}
                     <li><a href="{% url 'settings' %}">Change Account, Profile & Theme Settings</a></li>
