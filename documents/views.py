@@ -18,6 +18,7 @@ def index(request):
     return render(request, 'documents/dss.html', context)
 
 
+# redirected to when user clicks documents tab
 class DocListView(ListView):
     model = Document
     template_name = 'documents/docs.html'
@@ -70,6 +71,7 @@ class DocListView(ListView):
         return context
 
 
+# redirected to when user clicks on a specific document
 class DocDetailView(DetailView):
     model = Document
     form_class = RemoveUserForm
@@ -87,7 +89,7 @@ class DocDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         doc = self.get_object()
         can_edit = doc.users_that_write.filter(id=self.request.user.id)
-        if can_edit.exists():
+        if can_edit.exists():  # check if user can edit to determine whether edit button is displayed
             context['canedit'] = True
         else:
             context['canedit'] = False
@@ -99,14 +101,14 @@ class DocDetailView(DetailView):
         if request.POST.get("Lock"):
             doc.lock_status = True
             doc.locked_by = self.request.user.username
-            doc.view_count -= 1
+            doc.view_count -= 1  # locking a doc does not count towards view count
             doc.save()
             messages.success(request, f'Document Successfully Locked')
         elif request.POST.get("Unlock"):
             if self.request.user.username == doc.locked_by or self.request.user.profile.is_su():
                 doc.lock_status = False
                 doc.locked_by = ""
-                doc.view_count -= 1
+                doc.view_count -= 1  # unlocking a doc does not count towards view count
                 messages.success(request, f'Document Successfully Unlocked')
                 doc.save()
             else:
@@ -116,6 +118,7 @@ class DocDetailView(DetailView):
                 doc.update_info = 'Last updated by ' + doc.locked_by + ' on ' + str(datetime.datetime.now().strftime('%c'))
                 add = 0
                 remove = 0
+                # formatting txt files to read through without unnecessary whitespace
                 with doc.txt.open() as f:
                     text = list(f)
                     text = b''.join(text)
@@ -136,6 +139,7 @@ class DocDetailView(DetailView):
                     add = size_prev - size
                 cmds = []
                 index = 0
+                # generate commands to be put in cmd txt file
                 while add > 0 or remove > 0:
                     if remove > 0:
                         for word in text:
@@ -160,14 +164,12 @@ class DocDetailView(DetailView):
                             else:
                                 index += 1
                 index = len(text_prev)-1
-                print(text)
-                print(text_prev)
-                for word in reversed(text):
+                for word in reversed(text):  # number of lines in current and prev version is now equal
                     if word != text_prev[index]:
                         cmds.append("update " + str(index) + ' '+str(text_prev[index]))
                     index -= 1
-
                 cmds.reverse()
+                # write commands to cmd file and save
                 with doc.cmd_txt.open('a') as f:
                     f.write(str(doc.version)+'\n')
                     for command in cmds:
@@ -180,22 +182,21 @@ class DocDetailView(DetailView):
         elif request.POST.get("Version"):
             doc = self.get_object()
             version = doc.version
+            # formatting txt files to read through without unnecessary whitespace
             with doc.cur_ver.open() as f:
-                #current = list(filter(None, (line.rstrip() for line in f)))
                 current = list(f)
                 current = b''.join(current)
                 current = current.decode()
                 current = current.replace('\r', '')
                 current = current.splitlines()
             with doc.cmd_txt.open() as f:
-                #commands = list(filter(None, (line.rstrip() for line in f)))
                 commands = list(f)
                 commands = b''.join(commands)
                 commands = commands.decode()
                 commands = commands.replace('\r', '')
                 commands = commands.splitlines()
             commands.reverse()
-            while version > int(request.POST['Version']):
+            while version > int(request.POST['Version']):  # apply commands to access older versions
                 for cmd in commands:
                     if version <= int(request.POST['Version']):
                         break
@@ -259,7 +260,7 @@ class DocCreateView(LoginRequiredMixin, CreateView):
         form.instance.owner = self.request.user
         form.instance.last_edited_by = self.request.user  # updates last_edited_by attribute to current user
         self.object = form.save()
-        doc_txt = ContentFile(self.object.content)
+        doc_txt = ContentFile(self.object.content)  # create empty txt file to serve as default
         self.object.txt.save(self.object.title+'.txt', doc_txt)
         self.object.cur_ver.save(self.object.title + '_prev.txt', doc_txt)
         self.object.cmd_txt.save(self.object.title + '_cmd.txt', ContentFile(''))
@@ -283,14 +284,14 @@ class DocUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def form_valid(self, form):
         form.instance.last_edited_by = self.request.user  # updates last_edited_by attribute to current user
-        self.object.view_count -= 1
+        self.object.view_count -= 1  # edits do not count as a view
         self.object = form.save()
         self.object.txt.delete()
-        doc_txt = ContentFile(self.object.content)
+        doc_txt = ContentFile(self.object.content)  # update txt file representing current content
         self.object.txt.save(self.object.title+'.txt', doc_txt)
         return super().form_valid(form)
 
-    def test_func(self):
+    def test_func(self):  # make sure user can edit to view this page properly
         doc = self.get_object()
         if self.request.user == doc.owner or self.request.user in doc.users_that_write.all():
             return True
@@ -306,7 +307,7 @@ class DocDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
             raise PermissionDenied
         return super().dispatch(request, *args, **kwargs)
 
-    def test_func(self):
+    def test_func(self):  # only owner can delete his/her document
         doc = self.get_object()
         if self.request.user == doc.owner:
             return True
@@ -334,7 +335,7 @@ class DocInviteView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
 
     def post(self, request, *args, **kwargs):
         doc = self.get_object()
-        if request.POST.get("Accepted"):
+        if request.POST.get("Accepted"):  # remove user from pending contributor and add to contributors
             doc.pending_contributors.remove(self.request.user)
             doc.users_that_write.add(self.request.user)
             doc.save()
