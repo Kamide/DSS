@@ -18,6 +18,7 @@ def index(request):
     if not request.user.is_anonymous:
         return individuals(request, request.user.username, 'accounts/index.html')
     else:
+        # If user is not logged in, then display 'registration/please_log_in.html' in 'accounts/index.html'
         return render(request, 'accounts/index.html')
 
 
@@ -95,6 +96,7 @@ def users(request):
 
 def individuals(request, name, template='accounts/individuals.html'):
     try:
+        # Get user associated with name from URL
         individual = User.objects.get(username=name)
     except User.DoesNotExist:
         individual = request.user
@@ -102,6 +104,7 @@ def individuals(request, name, template='accounts/individuals.html'):
         messages.info(request, f'Now showing your profile page.')
 
     if request.method == 'POST' and request.user.profile.has_su_rights():
+        # Show the SU management toolbox
         um_form = UpdateMembershipForm(request.POST)
         if um_form.is_valid():
             cohort = request.POST.get('cohort')
@@ -110,6 +113,7 @@ def individuals(request, name, template='accounts/individuals.html'):
                 old_cohort = individual.profile.get_cohort()
                 individual.profile.set_cohort(cohort)
                 individual.profile.save()
+                # Profile.COHORTS[cohort][1] returns the name (str) of the cohort
                 messages.success(request, f'{name} has been successfully changed from a {old_cohort} to a {Profile.COHORTS[cohort][1]}.')
             except ValueError:
                 messages.error(request, f'Invalid group selected.')
@@ -118,11 +122,13 @@ def individuals(request, name, template='accounts/individuals.html'):
     else:
         um_form = UpdateMembershipForm(initial={'cohort': individual.profile.cohort})
 
+    # Get user's 3 most popular documents (based on views)
     documents = Document.objects.filter(owner=individual).order_by('view_count').reverse()
     doc_count = documents.count()
     doc_views = documents.aggregate(Sum('view_count'))
     documents = documents[:3]
     if doc_count < 1:
+        # If user doesn't have any documents, then get the 3 most popular documents in DSS
         documents = Document.objects.order_by('view_count').reverse()[:3]
         has_docs = False
     else:

@@ -29,7 +29,7 @@ urlpatterns = [
     # /membership_application/...
     path('membership_application/', include('memb_app.urls')),
     # /
-    path('', views.index, name='home'),
+    path('', views.index, name='home'),  # Individualized home page
     # /accounts/login/ [name='login']
     # /accounts/logout/ [name='logout']
     # /accounts/password_change/ [name='password_change']
