@@ -1,12 +1,16 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
 from .forms import TabooForm
 from .models import Taboo
 
 
 @login_required
 def add_word(request):
+    if not request.user.profile.has_su_rights():
+        raise PermissionDenied
+
     if request.method == "POST":
         taboo_form = TabooForm(request.POST)
         if taboo_form.is_valid():
@@ -47,6 +51,9 @@ def add_word(request):
 
 @login_required
 def del_word(request):
+    if not request.user.profile.has_su_rights():
+        raise PermissionDenied
+
     if request.method == "POST":
         taboo_form = TabooForm(request.POST)
         if taboo_form.is_valid():

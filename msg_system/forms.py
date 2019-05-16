@@ -10,6 +10,9 @@ class MessageForm(forms.ModelForm):
     class Meta:
         model = Message
         fields = ['receiver', 'reason', 'msg_content']
+        labels = {
+            'msg_content': 'Message content'
+        }
 
     # checks if user needs to contact a user that can process complaints (OU for docs and SU for general)
     # e.g, reporting someone: valid receivers are SUs only.

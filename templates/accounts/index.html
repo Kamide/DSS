@@ -40,7 +40,7 @@
                         <li><a href="{% url 'add_word' %}">Maintain Taboo Words List</a></li>
                         <li><a href="{% url 'manage' %}">Manage Membership Applications</a> </li>
                     {% else %}
-                        <li><a href="{% url 'add_word' %}">View Taboo Words List</a></li>
+                        <li><a href="{% url 'taboo_list' %}">View Taboo Words List</a></li>
                         {% if user|is_gu %}
                             {% if not user|already_applied %}
                                 <li><a href="{% url 'apply' %}">Apply to Become an OU</a></li>
