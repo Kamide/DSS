@@ -4,7 +4,10 @@
 #### (Everything our Team Accomplished)
 
 ![Home - Light](./screenshots/home-light.png)
+
 ![Documents - Dark](./screenshots/documents-dark.png)
+
+![Example Document](./screenshots/document.png)
 
 # Important
 In order to run this system, your computer must have the following requirements:
