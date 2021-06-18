@@ -17,7 +17,8 @@
 }
 
 #doc-content {
-    white-space: pre;
+    white-space: pre-line;
+    word-wrap: break-word;
 }
 
 #doc-content img {
